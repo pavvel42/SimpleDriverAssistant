@@ -98,7 +98,7 @@ public class User {
         this.raiting = raiting;
     }
 
-    public void userUpdate() {
+    protected void userUpdate() {
         db.collection("users").document(getEmail()).set(this, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -112,6 +112,10 @@ public class User {
                         Log.d(TAG, "Błąd w zapisnie danych: " + e.toString());
                     }
                 });
+    }
+
+    protected void databaseUpdate() {
+        //setLongitude(db.collection("users").document(getEmail()).get());
     }
 
 

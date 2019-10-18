@@ -1,6 +1,7 @@
 package com.example.simpledriverassistant;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,6 +32,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -50,7 +59,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView avatar;
     private TextView name, email;
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference notebookRef = db.collection("users");
+    private DocumentReference noteRef;
     private LocationManager locationManager;
+    //private static final String KEY_TITLE = "raiting";
+    //private static final String KEY_DESCRIPTION = "description";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,12 +122,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //              Toast.makeText(getApplicationContext(), "SNACK BAR", Toast.LENGTH_LONG).show();
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (FloatingBubblePermissions.requiresPermission(MainActivity.this) == false) /*jesli przyznano permission*/ {
-                    if (checkPerm() == true /*&& locationManager.isLocationEnabled()*/ && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        startService();
-                    } else if (/*locationManager.isLocationEnabled() == false*/locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
-                        Intent intent_action_location_source_settings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        InfoDialog exampleDialog = new InfoDialog("Proszę włączyć GPS", intent_action_location_source_settings);
-                        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                    if (checkPerm() == true /*&& locationManager.isLocationEnabled()*/) {
+                        if (/*locationManager.isLocationEnabled() == false*/locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
+                            Intent intent_action_location_source_settings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            InfoDialog exampleDialog = new InfoDialog("Proszę włączyć GPS", intent_action_location_source_settings);
+                            exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                        } else {
+                            startService();
+                        }
                     }
                 } else {
                     FloatingBubblePermissions.startPermissionRequest(MainActivity.this);
@@ -128,6 +145,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user.setUid(user_google_information.getUid());
         user.setOnline(state);
         user.userUpdate();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /*pierwsze logowanie do poprawy*/
+//        noteRef = db.document("users/"+user_google_information.getEmail());
+//        noteRef.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    return;
+//                }
+//                User userExample = documentSnapshot.toObject(User.class);
+//                Double raitingEx = userExample.getRaiting();
+//                Log.d(TAG,"Raiting: "+raitingEx);
+//            }
+//        });
+
+//        notebookRef.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    return;
+//                }
+//
+//                String data = "";
+//
+//                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+//                    User userExample = documentSnapshot.toObject(User.class);
+//                    //userExample.setDocumentId(documentSnapshot.getId());
+//
+//                    Double raitingEx = userExample.getRaiting();
+//                    Log.d(TAG,"Raiting: "+raitingEx);
+//                }
+//
+//                //textViewData.setText(data);
+//            }
+//        });
     }
 
     /*Nawigacja NavDrawer*/
