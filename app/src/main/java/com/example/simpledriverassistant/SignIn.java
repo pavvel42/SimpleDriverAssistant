@@ -27,10 +27,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class SignIn extends AppCompatActivity { /*https://www.youtube.com/watch?v=FtIc5UYXeKk&list=PLAiAOgZEvYQom2V8TXalGLXYxjYu6R7AS&index=5&t=742s*/
 
     private static final String TAG = SignIn.class.getSimpleName();
-    static final int GOOGLE_SIGN_IN = 123;
+    private static final int GOOGLE_SIGN_IN = 123;
     private FirebaseAuth mAuth;
     private Button login;
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
