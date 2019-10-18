@@ -1,12 +1,17 @@
 package com.example.simpledriverassistant;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -17,13 +22,45 @@ import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
+import static com.example.simpledriverassistant.MainActivity.user;
 import static com.example.simpledriverassistant.NotificationService.CHANNEL_ID;
 import static com.example.simpledriverassistant.R.layout.notification_view;
 
-public class FloatingService extends FloatingBubbleService {
+public class FloatingService extends FloatingBubbleService implements LocationListener {
 
     private static final String TAG = FloatingService.class.getSimpleName();
+    private LocationManager locationManager;
+    private LocationListener locationListener;
     View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, unlike, hide, radius, icon;
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude());
+        user.setLatitude(location.getLatitude());
+        user.setLongitude(location.getLongitude());
+        user.userUpdate();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        onDestroy();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void tracking() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, this /*locationListener*/);
+    }
 
     @Override
     protected void setTouchListener() {
@@ -37,6 +74,8 @@ public class FloatingService extends FloatingBubbleService {
     public void onDestroy() {
         super.onDestroy();
         floatingActionButton.setVisibility(View.VISIBLE);
+        user.setOnline(false);
+        user.userUpdate();
     }
 
     @Override
@@ -47,6 +86,7 @@ public class FloatingService extends FloatingBubbleService {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Simple Driver Assistant").setContentText(input).setSmallIcon(R.drawable.bubble_default_icon).setContentIntent(pendingIntent).build();
         startForeground(1, notification);
+        tracking();
         return super.onStartCommand(intent, flags, Service.START_NOT_STICKY);
     }
 

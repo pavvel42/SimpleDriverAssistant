@@ -1,5 +1,14 @@
 package com.example.simpledriverassistant;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
 public class User {
 
     private String email;
@@ -11,20 +20,10 @@ public class User {
     private int like;
     private int unlike;
     private double raiting;
+    private static final String TAG = User.class.getSimpleName();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public User() {
-    }
-
-    public User(String email, String uid, String name, Double latitude, Double longitude, Boolean online, int like, int unlike, double raiting) {
-        this.email = email;
-        this.uid = uid;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.online = online;
-        this.like = like;
-        this.unlike = unlike;
-        this.raiting = raiting;
     }
 
     public String getEmail() {
@@ -97,6 +96,22 @@ public class User {
 
     public void setRaiting(double raiting) {
         this.raiting = raiting;
+    }
+
+    public void userUpdate() {
+        db.collection("users").document(getEmail()).set(this, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Dane zostały zapisane");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Błąd w zapisnie danych: " + e.toString());
+                    }
+                });
     }
 
 

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleSignInClient mGoogleSignInClient;
+    protected static User user = new User();
     private DrawerLayout drawer;
     private View headerView;
     protected static View floatingActionButton; //FloatingActionButton
@@ -103,12 +104,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 //              Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//                Toast.makeText(getApplicationContext(), "SNACK BAR", Toast.LENGTH_LONG).show();
+//              Toast.makeText(getApplicationContext(), "SNACK BAR", Toast.LENGTH_LONG).show();
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (FloatingBubblePermissions.requiresPermission(MainActivity.this) == false) /*jesli przyznano permission*/ {
-                    if (checkPerm() == true /*&& locationManager.isLocationEnabled() locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER*/) {
-//                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, locationListener);
-//                        saveProfile(true);
+                    if (checkPerm() == true /*&& locationManager.isLocationEnabled()*/ && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         startService();
                     } else if (/*locationManager.isLocationEnabled() == false*/locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
                         Intent intent_action_location_source_settings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -120,6 +119,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+    }
+
+    /*Ststus usera Online/Offline*/
+    private void userOnline(Boolean state) {
+        user.setEmail(user_google_information.getEmail());
+        user.setName(user_google_information.getDisplayName());
+        user.setUid(user_google_information.getUid());
+        user.setOnline(state);
+        user.userUpdate();
     }
 
     /*Nawigacja NavDrawer*/
@@ -179,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent serviceIntent = new Intent(this, FloatingService.class);
         serviceIntent.putExtra("inputExtra", "Kliknij aby powrócić");
         ContextCompat.startForegroundService(this, serviceIntent);
+        userOnline(true);
         floatingActionButton.setVisibility(View.INVISIBLE);
     }
 
