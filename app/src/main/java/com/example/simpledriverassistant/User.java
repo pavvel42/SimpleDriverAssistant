@@ -3,6 +3,7 @@ package com.example.simpledriverassistant;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,7 +19,7 @@ public class User {
     private Double longitude;
     private Boolean online;
     private int like;
-    private int unlike;
+    private int dislike;
     private double raiting;
     private static final String TAG = User.class.getSimpleName();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -82,12 +83,12 @@ public class User {
         this.like = like;
     }
 
-    public int getUnlike() {
-        return unlike;
+    public int getDislike() {
+        return dislike;
     }
 
-    public void setUnlike(int unlike) {
-        this.unlike = unlike;
+    public void setDislike(int unlike) {
+        this.dislike = unlike;
     }
 
     public double getRaiting() {
@@ -96,6 +97,10 @@ public class User {
 
     public void setRaiting(double raiting) {
         this.raiting = raiting;
+    }
+
+    protected void userToString() {
+        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLatitude " + getLatitude() + " getLongitude " + getLongitude() + " getOnline " + getOnline() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting());
     }
 
     protected void userUpdate() {
@@ -112,11 +117,6 @@ public class User {
                         Log.d(TAG, "Błąd w zapisnie danych: " + e.toString());
                     }
                 });
+        userToString();
     }
-
-    protected void databaseUpdate() {
-        //setLongitude(db.collection("users").document(getEmail()).get());
-    }
-
-
 }

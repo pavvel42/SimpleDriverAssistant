@@ -15,11 +15,20 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
 import static com.example.simpledriverassistant.MainActivity.user;
@@ -29,9 +38,13 @@ import static com.example.simpledriverassistant.R.layout.notification_view;
 public class FloatingService extends FloatingBubbleService implements LocationListener {
 
     private static final String TAG = FloatingService.class.getSimpleName();
+    private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference collectionReference = db.collection("users");
+    private DocumentReference documentReference;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, unlike, hide, radius, icon;
+    View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, dislike, hide, radius, icon;
 
     @Override
     public void onLocationChanged(Location location) {
@@ -39,6 +52,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         user.setLatitude(location.getLatitude());
         user.setLongitude(location.getLongitude());
         user.userUpdate();
+        Log.d(TAG, getString(R.string.firebase_upload));
     }
 
     @Override
@@ -76,6 +90,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         floatingActionButton.setVisibility(View.VISIBLE);
         user.setOnline(false);
         user.userUpdate();
+        Log.d(TAG, getString(R.string.firebase_upload));
     }
 
     @Override
@@ -140,7 +155,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         buttonInspection = expandableView.findViewById(R.id.inspection);
         buttonSpeedCamera = expandableView.findViewById(R.id.speed_camera);
         like = expandableView.findViewById(R.id.like);
-        unlike = expandableView.findViewById(R.id.unlike);
+        dislike = expandableView.findViewById(R.id.dislike);
         radius = expandableView.findViewById(R.id.radius);
         icon = expandableView.findViewById(R.id.icon);
         hide = expandableView.findViewById(R.id.hide);
@@ -177,7 +192,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 hideDown();
             }
         });
-        unlike.setOnClickListener(new View.OnClickListener() {
+        dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideDown();
@@ -199,7 +214,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         radius.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
         like.setVisibility(View.VISIBLE);
-        unlike.setVisibility(View.VISIBLE);
+        dislike.setVisibility(View.VISIBLE);
     }
 
     public void hideDown() {
@@ -210,6 +225,6 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         radius.setVisibility(View.GONE);
         icon.setVisibility(View.GONE);
         like.setVisibility(View.GONE);
-        unlike.setVisibility(View.GONE);
+        dislike.setVisibility(View.GONE);
     }
 }

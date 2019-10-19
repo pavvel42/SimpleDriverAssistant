@@ -1,12 +1,15 @@
 package com.example.simpledriverassistant;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.Intent;
@@ -31,7 +34,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -52,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView name, email;
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference notebookRef = db.collection("users");
-    private DocumentReference noteRef;
+    private CollectionReference collectionReference = db.collection("users");
+    private DocumentReference documentReference;
     private LocationManager locationManager;
 
     @Override
@@ -102,6 +108,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*odświeżenie fragmentu*/
+    private void refreshFragment() {
+        Log.d(TAG, getString(R.string.refresh_fragment));
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.detach(fragment);
+        fragmentTransaction.attach(fragment);
+        fragmentTransaction.commit();
+    }
+
     /*Akcje Buttons*/
     private void actionSetOnClickListener() {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -134,14 +150,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user.setUid(user_google_information.getUid());
         user.setOnline(state);
         user.userUpdate();
+        Log.d(TAG, getString(R.string.firebase_upload));
+    }
+
+    protected void userDownload() {
+        Log.d(TAG, getString(R.string.firebase_download));
+        documentReference = db.document("users/" + user_google_information.getEmail());
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                if (documentSnapshot.exists()) {
+                    User userDocument = documentSnapshot.toObject(User.class);
+                    user.setRaiting(userDocument.getRaiting());
+                    user.setLike(userDocument.getLike());
+                    user.setDislike(userDocument.getDislike());
+                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
+                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
+                    user.userToString();
+                    Log.d(TAG, getString(R.string.firebase_download));
+                    user.toString();
+                    refreshFragment();
+                } else {
+                    userOnline(false);
+                }
+            }
+        });
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
-        /*pierwsze logowanie do poprawy*/
-//        noteRef = db.document("users/"+user_google_information.getEmail());
-//        noteRef.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        userDownload();
+        /*potrzebuje executora!? do działania w klasie user*/
+//        documentReference = db.document("users/"+user_google_information.getEmail());
+//        documentReference.addSnapshotListener((Executor) User.this, new EventListener<DocumentSnapshot>() {
 //            @Override
 //            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 //                if (e != null) {
@@ -153,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            }
 //        });
 
-//        notebookRef.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+        /*Nasłuchiwanie kolekcji*/
+//        collectionReference.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
 //            @Override
 //            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
 //                if (e != null) {
@@ -173,6 +219,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                //textViewData.setText(data);
 //            }
 //        });
+    }
+
+    /* Wylogowanie z Firebase*/
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        stopService();
+                        finish();
+                        startActivity(new Intent(MainActivity.this, SignIn.class));
+                    }
+                });
     }
 
     /*Nawigacja NavDrawer*/
@@ -196,26 +262,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    /* Wylogowanie z Firebase*/
-    private void logout() {
-        FirebaseAuth.getInstance().signOut();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        stopService();
-                        finish();
-                        startActivity(new Intent(MainActivity.this, SignIn.class));
-                    }
-                });
     }
 
     @Override

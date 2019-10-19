@@ -15,12 +15,15 @@
     <string name="choose_action">Choose Action</string>
     <string name="hide">Hide</string>
     <string name="distance">500m</string>
-    <!--    <string name=""> </string>-->
-    <!--    <string name=""> </string>-->
-    <!--    <string name=""> </string>-->
-    <!--    <string name=""> </string>-->
-    <!--    <string name=""> </string>-->
+    <string name="raiting">Raiting: </string>
+    <string name="like">Likes: </string>
+    <string name="dislike">Dislikes: </string>
+    <string name="latitude">Latitude: </string>
+    <string name="longitude">Longitude: </string>
+    <string name="firebase_upload">Firebase User Object Upload Start</string>
+    <string name="firebase_download">Firebase User Object Download Start</string>
+    <string name="refresh_fragment">Refresh Fragment</string>
     <!--    <string name=""> </string>-->
 
-<!--    getString(R.string)-->
+    <!--    getString(R.string)-->
 </resources>
