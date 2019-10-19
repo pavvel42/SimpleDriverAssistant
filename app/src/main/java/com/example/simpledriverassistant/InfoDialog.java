@@ -34,9 +34,9 @@ public class InfoDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Information")
+        builder.setTitle(getString(R.string.information))
                 .setMessage(getInfo())
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (getIntent() != null) {
@@ -44,7 +44,7 @@ public class InfoDialog extends AppCompatDialogFragment {
                         }
                     }
                 })
-                .setNegativeButton("close", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

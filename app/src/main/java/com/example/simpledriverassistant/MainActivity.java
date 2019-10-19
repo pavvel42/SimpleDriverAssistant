@@ -63,9 +63,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectionReference notebookRef = db.collection("users");
     private DocumentReference noteRef;
     private LocationManager locationManager;
-    //private static final String KEY_TITLE = "raiting";
-    //private static final String KEY_DESCRIPTION = "description";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (checkPerm() == true /*&& locationManager.isLocationEnabled()*/) {
                         if (/*locationManager.isLocationEnabled() == false*/locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
                             Intent intent_action_location_source_settings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            InfoDialog exampleDialog = new InfoDialog("Proszę włączyć GPS", intent_action_location_source_settings);
+                            InfoDialog exampleDialog = new InfoDialog(getString(R.string.pls_turn_on_gps), intent_action_location_source_settings);
                             exampleDialog.show(getSupportFragmentManager(), "example dialog");
                         } else {
                             startService();
@@ -241,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /*Start usługi*/
     public void startService() {
         Intent serviceIntent = new Intent(this, FloatingService.class);
-        serviceIntent.putExtra("inputExtra", "Kliknij aby powrócić");
+        serviceIntent.putExtra("inputExtra", getString(R.string.click_to_return));
         ContextCompat.startForegroundService(this, serviceIntent);
         userOnline(true);
         floatingActionButton.setVisibility(View.INVISIBLE);
@@ -266,14 +263,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (EasyPermissions.hasPermissions(this, perms)) {
             return true;
         } else {
-            EasyPermissions.requestPermissions(this, "Potrzeba odpowiednich uprawień do poprawnego działania aplikacji", 123, perms);
+            EasyPermissions.requestPermissions(this, getString(R.string.need_permission), 123, perms);
             return false;
         }
     }
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        InfoDialog exampleDialog = new InfoDialog("Dziękuję za przyzanie uprawnień, możesz korzystać z aplikacji.");
+        InfoDialog exampleDialog = new InfoDialog(getString(R.string.thx_for_persmission));
         exampleDialog.show(getSupportFragmentManager(), "example dialog");
     }
 

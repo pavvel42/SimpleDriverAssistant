@@ -84,7 +84,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Simple Driver Assistant").setContentText(input).setSmallIcon(R.drawable.bubble_default_icon).setContentIntent(pendingIntent).build();
+                .setContentTitle(getString(R.string.app_name)).setContentText(input).setSmallIcon(R.drawable.bubble_default_icon).setContentIntent(pendingIntent).build();
         startForeground(1, notification);
         tracking();
         return super.onStartCommand(intent, flags, Service.START_NOT_STICKY);

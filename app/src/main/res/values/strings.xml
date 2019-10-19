@@ -1,7 +1,26 @@
 <resources>
-    <string name="app_name">SimpleDriverAssistant</string>
+    <string name="app_name">Simple Driver Assistant</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="firebase_login">Firebase Login</string>
     <string name="login_with_google">Login with Google</string>
+    <string name="pls_turn_on_gps">Proszę włączyć GPS</string>
+    <string name="click_to_return">Kliknij, aby powrócić</string>
+    <string name="need_permission">Potrzeba odpowiednich uprawień do poprawnego działania aplikacji</string>
+    <string name="thx_for_persmission">Dziękuję za przyzanie uprawnień, możesz korzystać z aplikacji</string>
+    <string name="service_channel">Service Channel</string>
+    <string name="information">Information</string>
+    <string name="ok">OK</string>
+    <string name="close">Close</string>
+    <string name="choose_action">Choose Action</string>
+    <string name="hide">Hide</string>
+    <string name="distance">500m</string>
+    <!--    <string name=""> </string>-->
+    <!--    <string name=""> </string>-->
+    <!--    <string name=""> </string>-->
+    <!--    <string name=""> </string>-->
+    <!--    <string name=""> </string>-->
+    <!--    <string name=""> </string>-->
+
+<!--    getString(R.string)-->
 </resources>
