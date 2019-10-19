@@ -66,7 +66,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 if (e != null) {
                     return;
                 }
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
                     Toast.makeText(getApplicationContext(), "Dane pobrane", Toast.LENGTH_LONG).show();
                     Log.d(TAG, getString(R.string.firebase_download));
@@ -130,7 +130,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         Context context = getApplicationContext();
         return new FloatingBubbleConfig.Builder()
                 // Set the drawable for the bubble
-                .bubbleIcon(ContextCompat.getDrawable(context, R.mipmap.ic_launcher_round))
+                .bubbleIcon(ContextCompat.getDrawable(context, R.mipmap.ic_icon_car_round))
 
                 // Set the drawable for the remove bubble
                 .removeBubbleIcon(ContextCompat.getDrawable(context, R.drawable.close_default_icon))
