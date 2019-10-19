@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -53,6 +54,25 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         user.setLongitude(location.getLongitude());
         user.userUpdate();
         Log.d(TAG, getString(R.string.firebase_upload));
+        //userDownload();
+    }
+
+    protected void userDownload() {
+        Log.d(TAG, getString(R.string.firebase_download));
+        documentReference = db.document("users/" + user_google_information.getEmail());
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                if(documentSnapshot.exists()){
+                    User userDocument = documentSnapshot.toObject(User.class);
+                    Toast.makeText(getApplicationContext(), "Dane pobrane", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, getString(R.string.firebase_download));
+                }
+            }
+        });
     }
 
     @Override
