@@ -14,9 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -26,10 +24,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
 import static com.example.simpledriverassistant.MainActivity.user;
@@ -54,25 +50,6 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         user.setLongitude(location.getLongitude());
         user.userUpdate();
         Log.d(TAG, getString(R.string.firebase_upload));
-        //userDownload();
-    }
-
-    protected void userDownload() {
-        Log.d(TAG, getString(R.string.firebase_download));
-        documentReference = db.document("users/" + user_google_information.getEmail());
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
-                if (documentSnapshot.exists()) {
-                    User userDocument = documentSnapshot.toObject(User.class);
-                    Toast.makeText(getApplicationContext(), "Dane pobrane", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, getString(R.string.firebase_download));
-                }
-            }
-        });
     }
 
     @Override
@@ -93,7 +70,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     @SuppressLint("MissingPermission")
     private void tracking() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, this /*locationListener*/);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this /*locationListener*/);
     }
 
     @Override
@@ -110,6 +87,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         floatingActionButton.setVisibility(View.VISIBLE);
         user.setOnline(false);
         user.userUpdate();
+        locationManager.removeUpdates(this);
         Log.d(TAG, getString(R.string.firebase_upload));
     }
 
@@ -247,4 +225,5 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         like.setVisibility(View.GONE);
         dislike.setVisibility(View.GONE);
     }
+
 }

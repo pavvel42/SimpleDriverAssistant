@@ -3,11 +3,18 @@ package com.example.simpledriverassistant;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
 
 public class User {
@@ -22,7 +29,10 @@ public class User {
     private int dislike;
     private double raiting;
     private static final String TAG = User.class.getSimpleName();
+    private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference collectionReference = db.collection("users");
+    private DocumentReference documentReference;
 
     public User() {
     }
@@ -118,5 +128,28 @@ public class User {
                     }
                 });
         userToString();
+    }
+
+    private void userDownload() {
+        //Log.d(TAG, getString(R.string.firebase_download));
+        documentReference = db.document("users/" + user_google_information.getEmail());
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                if (documentSnapshot.exists()) {
+                    User userDocument = documentSnapshot.toObject(User.class);
+                    setRaiting(userDocument.getRaiting());
+                    setLike(userDocument.getLike());
+                    setDislike(userDocument.getDislike());
+                    setLongitude(userDocument.getLongitude());
+                    setLatitude(userDocument.getLatitude());
+                    userToString();
+                    //refreshFragment();
+                }
+            }
+        });
     }
 }

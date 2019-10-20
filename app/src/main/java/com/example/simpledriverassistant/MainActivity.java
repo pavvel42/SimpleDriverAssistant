@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /*Ststus usera Online/Offline*/
-    private void userOnline(Boolean state) {
+    protected void userOnline(Boolean state) {
         user.setEmail(user_google_information.getEmail());
         user.setName(user_google_information.getDisplayName());
         user.setUid(user_google_information.getUid());
@@ -153,37 +153,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, getString(R.string.firebase_upload));
     }
 
-    protected void userDownload() {
-        Log.d(TAG, getString(R.string.firebase_download));
-        documentReference = db.document("users/" + user_google_information.getEmail());
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
-                if (documentSnapshot.exists()) {
-                    User userDocument = documentSnapshot.toObject(User.class);
-                    user.setRaiting(userDocument.getRaiting());
-                    user.setLike(userDocument.getLike());
-                    user.setDislike(userDocument.getDislike());
-                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
-                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
-                    user.userToString();
-                    Log.d(TAG, getString(R.string.firebase_download));
-                    user.toString();
-                    refreshFragment();
-                } else {
-                    userOnline(false);
-                }
-            }
-        });
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        userDownload();
         /*potrzebuje executora!? do działania w klasie user*/
 //        documentReference = db.document("users/"+user_google_information.getEmail());
 //        documentReference.addSnapshotListener((Executor) User.this, new EventListener<DocumentSnapshot>() {
