@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#1c313a</color>
-    <color name="colorPrimaryDark">#455a64</color>
-    <color name="colorAccent">#718792</color>
-    <color name="colorText">#ffffff</color>
-    <color name="backgroudColor">#62757f</color>
-    <color name="dark">#000000</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="accent">#FF5722</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 
-    <color name="purple1">#b085f5</color>
-    <color name="purple2">#7e57c2</color>
-    <color name="purple3">#4d2c91</color>
-    <color name="blue1">#8e99f3</color>
-    <color name="blue2">#5c6bc0</color>
-    <color name="blue3">#26418f</color>
-    <color name="white">#ffffff</color>
-
-    <!--    STOCK COLORS-->
-    <!--        <color name="colorPrimary">#008577</color>-->
-    <!--        <color name="colorPrimaryDark">#00574B</color>-->
-    <!--        <color name="colorAccent">#D81B60</color>-->
 </resources>

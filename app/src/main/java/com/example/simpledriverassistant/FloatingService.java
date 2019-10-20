@@ -114,16 +114,16 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 .removeBubbleIcon(ContextCompat.getDrawable(context, R.drawable.close_default_icon))
 
                 // Set the size of the bubble in dp
-                .bubbleIconDp(64)
+                .bubbleIconDp(75)
 
                 // Set the size of the remove bubble in dp
-                .removeBubbleIconDp(64)
+                .removeBubbleIconDp(75)
 
                 // Set the padding of the view from the boundary
-                .paddingDp(4)
+                .paddingDp(15)
 
                 // Set the radius of the border of the expandable view
-                .borderRadiusDp(4)
+                .borderRadiusDp(8)
 
                 // Does the bubble attract towards the walls
                 .physicsEnabled(true)
@@ -132,7 +132,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 .expandableColor(Color.WHITE)
 
                 // The color of the triangular layout
-                .triangleColor(Color.WHITE)
+                .triangleColor(getColor(R.color.primary))
 
                 // Horizontal gravity of the bubble when expanded
                 .gravity(Gravity.END)

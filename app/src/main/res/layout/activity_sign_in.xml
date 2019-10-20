@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/primary"
+    android:theme="@style/AppTheme"
     tools:context=".SignIn">
 
     <ImageView
@@ -23,7 +24,7 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textColor="@android:color/white"
+        android:textColor="@color/icons"
         android:textSize="16sp" />
 
     <ProgressBar
@@ -47,7 +48,7 @@
         android:drawableStart="@drawable/ic_google_logo"
         android:drawableLeft="@drawable/ic_google_logo"
         android:gravity="center"
-        android:text="@string/login_with_google"
-        android:textColor="@color/dark" />
+        android:textColor="@color/primary_text"
+        android:text="@string/login_with_google" />
 
 </RelativeLayout>
