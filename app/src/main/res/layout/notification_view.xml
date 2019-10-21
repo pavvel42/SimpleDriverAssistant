@@ -75,7 +75,7 @@
             <!-- [Row 1/////////////////////////////////////////////////////////////////////////////////////////////////////////////] -->
             <!-- Column 1.1 -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/traffic_cone"
+                android:id="@+id/speed_camera"
                 android:layout_width="0dp"
                 android:layout_height="85dp"
                 android:layout_rowWeight="1"
@@ -106,7 +106,7 @@
 
             <!-- Column 1.2 -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/car_crash"
+                android:id="@+id/traffic_cone"
                 android:layout_width="0dp"
                 android:layout_height="85dp"
                 android:layout_rowWeight="1"
@@ -170,7 +170,7 @@
 
             <!-- Column 2.2 -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/speed_camera"
+                android:id="@+id/car_crash"
                 android:layout_width="0dp"
                 android:layout_height="85dp"
                 android:layout_rowWeight="1"

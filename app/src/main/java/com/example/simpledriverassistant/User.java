@@ -3,7 +3,6 @@ package com.example.simpledriverassistant;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -12,10 +11,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
+
+import static com.example.simpledriverassistant.MainActivity.user;
 
 public class User {
 
@@ -27,7 +26,7 @@ public class User {
     private Boolean online;
     private int like;
     private int dislike;
-    private double raiting;
+    private Double raiting;
     private static final String TAG = User.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -101,11 +100,11 @@ public class User {
         this.dislike = unlike;
     }
 
-    public double getRaiting() {
+    public Double getRaiting() {
         return raiting;
     }
 
-    public void setRaiting(double raiting) {
+    public void setRaiting(Double raiting) {
         this.raiting = raiting;
     }
 
@@ -130,25 +129,34 @@ public class User {
         userToString();
     }
 
-    private void userDownload() {
-        //Log.d(TAG, getString(R.string.firebase_download));
-        documentReference = db.document("users/" + user_google_information.getEmail());
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+    private void userDownloadOnes() {
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
-                    setRaiting(userDocument.getRaiting());
-                    setLike(userDocument.getLike());
-                    setDislike(userDocument.getDislike());
-                    setLongitude(userDocument.getLongitude());
-                    setLatitude(userDocument.getLatitude());
-                    userToString();
+                    user.setRaiting(userDocument.getRaiting());
+                    user.setLike(userDocument.getLike());
+                    user.setDislike(userDocument.getDislike());
+                    user.setLongitude(userDocument.getLongitude());
+                    user.setLatitude(userDocument.getLatitude());
+                    user.userToString();
+                    user.toString();
                     //refreshFragment();
+                } else {
+                    user.setEmail(user_google_information.getEmail());
+                    user.setName(user_google_information.getDisplayName());
+                    user.setUid(user_google_information.getUid());
+                    user.setOnline(false);
+                    user.userUpdate();
+                    //Log.d(TAG, getString(R.string.firebase_upload));
                 }
+                Log.d(TAG, "Dane zostały zapisane");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Błąd w zapisnie danych: " + e.toString());
             }
         });
     }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ public class SignIn extends AppCompatActivity { /*https://www.youtube.com/watch?
     private Button login;
     private ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
+    private NetworkStateReceiver networkStateReceiver = new NetworkStateReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,13 @@ public class SignIn extends AppCompatActivity { /*https://www.youtube.com/watch?
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SignInGoogle();
+                if (networkStateReceiver.haveNetworkConnection(SignIn.this) == false) {
+                    Intent intent_action_location_source_settings = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+                    InfoDialog exampleDialog = new InfoDialog(getString(R.string.pls_turn_on_network_connection), intent_action_location_source_settings);
+                    exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                } else {
+                    SignInGoogle();
+                }
             }
         });
 

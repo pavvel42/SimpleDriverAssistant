@@ -11,12 +11,16 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
@@ -24,7 +28,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
@@ -41,7 +49,12 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     private DocumentReference documentReference;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    protected static Actions actions = new Actions();
+    private NetworkStateReceiver networkStateReceiver = new NetworkStateReceiver();
+    private Report report = new Report();
+    private CurrentTime currentTime = new CurrentTime();
     View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, dislike, hide, radius, icon;
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -64,13 +77,14 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
 
     @Override
     public void onProviderDisabled(String provider) {
-        onDestroy();
+        Intent serviceIntent = new Intent(this, FloatingService.class);
+        stopService(serviceIntent);
     }
 
     @SuppressLint("MissingPermission")
     private void tracking() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this /*locationListener*/);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, this /*locationListener*/);
     }
 
     @Override
@@ -163,25 +177,29 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         buttonTrafficCone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideUp();
+                chooseAction(actions.getRoadworks());
+                //hideUp();
             }
         });
         buttonCarCrash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideUp();
+                chooseAction(actions.getCarAccident());
+                //hideUp();
             }
         });
         buttonInspection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideUp();
+                chooseAction(actions.getRoadsideInspection());
+                //hideUp();
             }
         });
         buttonSpeedCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideUp();
+                chooseAction(actions.getSpeedCamera());
+                //hideUp();
             }
         });
         like.setOnClickListener(new View.OnClickListener() {
@@ -200,6 +218,47 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
             @Override
             public void onClick(View v) {
                 setState(false);
+            }
+        });
+    }
+
+    private void chooseAction(String action) {
+        if (networkStateReceiver.haveNetworkConnection(this) == false) {
+            Toast.makeText(getApplicationContext(), getString(R.string.pls_turn_on_network_connection), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (report.coordinatesNotNull() == true) {
+            report.setAction(action);
+            report.setTime(currentTime.milliseconds());
+            report.reportUpdate();
+            Log.d(TAG, getString(R.string.send_report));
+            setState(false);
+            Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.lost_gps), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /*tylko probnie wstawiona*/
+    private void reportForUserListener() {
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+
+                String data = "";
+
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    User userExample = documentSnapshot.toObject(User.class);
+                    //userExample.setDocumentId(documentSnapshot.getId());
+
+                    Double raitingEx = userExample.getRaiting();
+                    Log.d(TAG, "Raiting: " + raitingEx);
+                }
+
+                //textViewData.setText(data);
             }
         });
     }

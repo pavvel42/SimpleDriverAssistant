@@ -12,8 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference;
     private LocationManager locationManager;
+    private NetworkStateReceiver networkStateReceiver = new NetworkStateReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (/*locationManager.isLocationEnabled() == false*/locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
                             Intent intent_action_location_source_settings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             InfoDialog exampleDialog = new InfoDialog(getString(R.string.pls_turn_on_gps), intent_action_location_source_settings);
+                            exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                        } else if (networkStateReceiver.haveNetworkConnection(MainActivity.this) == false) {
+                            Intent intent_action_location_source_settings = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+                            InfoDialog exampleDialog = new InfoDialog(getString(R.string.pls_turn_on_network_connection), intent_action_location_source_settings);
                             exampleDialog.show(getSupportFragmentManager(), "example dialog");
                         } else {
                             startService();

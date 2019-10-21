@@ -29,9 +29,10 @@ public class ProfileFragment extends Fragment {
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("users");
-    private DocumentReference documentReference;
+    private DocumentReference documentReference = db.document("users/" + user_google_information.getEmail());
     protected View card_view_profile;
     private TextView user_raiting, user_like, user_dislike, user_longitude, user_latitude;
+    private CurrentTime currentTime = new CurrentTime();
 
     @Nullable
     @Override
@@ -57,6 +58,7 @@ public class ProfileFragment extends Fragment {
 
     public void setValueInCardview() {
         user_raiting.setText(getString(R.string.raiting) + user.getRaiting());
+//        user_raiting.setText(currentTime.milliseconds());
         user_like.setText(getString(R.string.like) + user.getLike());
         user_dislike.setText(getString(R.string.dislike) + user.getDislike());
         user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
@@ -82,12 +84,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        userDownload();
+        userDownloadListener();
     }
 
-    private void userDownload() {
+    private void userDownloadListener() {
         Log.d(TAG, getString(R.string.firebase_download));
-        documentReference = db.document("users/" + user_google_information.getEmail());
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -99,8 +100,8 @@ public class ProfileFragment extends Fragment {
                     user.setRaiting(userDocument.getRaiting());
                     user.setLike(userDocument.getLike());
                     user.setDislike(userDocument.getDislike());
-                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
-                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
+//                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
+//                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
                     user.userToString();
                     user.toString();
                     setValueInCardview();                     //refreshFragment();
