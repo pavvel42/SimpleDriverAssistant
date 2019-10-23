@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -24,6 +25,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -33,6 +36,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
@@ -47,6 +52,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference;
+    private FirebaseFunctions mFunctions;
     private LocationManager locationManager;
     private LocationListener locationListener;
     protected static Actions actions = new Actions();
@@ -161,7 +167,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 .build();
     }
 
-    public void initVariables() {
+    private void initVariables() {
         buttonTrafficCone = expandableView.findViewById(R.id.traffic_cone);
         buttonCarCrash = expandableView.findViewById(R.id.car_crash);
         buttonInspection = expandableView.findViewById(R.id.inspection);
@@ -173,10 +179,34 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         hide = expandableView.findViewById(R.id.hide);
     }
 
+    private void sendPromise(){
+        mFunctions = FirebaseFunctions.getInstance();
+
+        FirebaseFunctions.getInstance() // Optional region: .getInstance("europe-west1")
+                .getHttpsCallable("onReportCreate")
+                .call()
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Błąd przy wywołaniu: "+e);
+                        Toast.makeText(getApplicationContext(), "Błąd przy wywołaniu: "+e, Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
+                    @Override
+                    public void onSuccess(HttpsCallableResult httpsCallableResult) {
+                        Log.d(TAG, "Poprawnie wywołana funkcja");
+                        Toast.makeText(getApplicationContext(), "Poprawnie wywołana funkcja", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+
     public void onViewDisplay() {
         buttonTrafficCone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //sendPromise();
                 chooseAction(actions.getRoadworks());
                 //hideUp();
             }

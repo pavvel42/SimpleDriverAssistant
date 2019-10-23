@@ -57,12 +57,17 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setValueInCardview() {
-        user_raiting.setText(getString(R.string.raiting) + user.getRaiting());
-//        user_raiting.setText(currentTime.milliseconds());
-        user_like.setText(getString(R.string.like) + user.getLike());
-        user_dislike.setText(getString(R.string.dislike) + user.getDislike());
-        user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
-        user_latitude.setText(getString(R.string.latitude) + user.getLatitude());
+//        user_raiting.setText(getResources().getString(R.string.raiting) + user.getRaiting()); /*getString crash app https://stackoverflow.com/questions/18956766/android-application-crashes-at-the-getstring-line#comment27996309_18956819*/
+//        user_like.setText(getString(R.string.like) + user.getLike());
+//        user_dislike.setText(getString(R.string.dislike) + user.getDislike());
+//        user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
+//        user_latitude.setText(getString(R.string.latitude) + user.getLatitude());
+
+        user_raiting.setText("Raiting: " + user.getRaiting());
+        user_like.setText("Likes: " + user.getLike());
+        user_dislike.setText("Dislikes: " + user.getDislike());
+        user_longitude.setText("Longitude: " + user.getLongitude());
+        user_latitude.setText("Lalitude: " + user.getLatitude());
     }
 
     private void actionSetOnClickListener() {
