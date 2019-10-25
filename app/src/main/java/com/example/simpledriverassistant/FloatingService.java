@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -21,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 
 import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
@@ -90,7 +88,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     @SuppressLint("MissingPermission")
     private void tracking() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, this /*locationListener*/);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, this /*locationListener*/);
     }
 
     @Override
@@ -179,7 +177,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         hide = expandableView.findViewById(R.id.hide);
     }
 
-    private void sendPromise(){
+    private void sendPromise() {
         mFunctions = FirebaseFunctions.getInstance();
 
         FirebaseFunctions.getInstance() // Optional region: .getInstance("europe-west1")
@@ -188,8 +186,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Błąd przy wywołaniu: "+e);
-                        Toast.makeText(getApplicationContext(), "Błąd przy wywołaniu: "+e, Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "Błąd przy wywołaniu: " + e);
+                        Toast.makeText(getApplicationContext(), "Błąd przy wywołaniu: " + e, Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
