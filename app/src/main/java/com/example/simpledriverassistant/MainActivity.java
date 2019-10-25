@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleSignInClient mGoogleSignInClient;
+    protected static LocationUser locationUser = new LocationUser();
     protected static User user = new User();
     private DrawerLayout drawer;
     private View headerView;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /*odświeżenie fragmentu*/
-    private void refreshFragment() {
+    protected void refreshFragment() {
         Log.d(TAG, getString(R.string.refresh_fragment));
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user.setEmail(user_google_information.getEmail());
         user.setName(user_google_information.getDisplayName());
         user.setUid(user_google_information.getUid());
-        user.setOnline(state);
+        locationUser.setOnline(state);
         user.userUpdate();
         Log.d(TAG, getString(R.string.firebase_upload));
     }

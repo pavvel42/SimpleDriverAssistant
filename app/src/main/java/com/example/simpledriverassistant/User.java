@@ -21,9 +21,10 @@ public class User {
     private String email;
     private String uid;
     private String name;
-    private Double latitude;
-    private Double longitude;
-    private Boolean online;
+    //    private Double latitude;
+    //    private Double longitude;
+    //    private Boolean online;
+    private LocationUser locationUser;
     private int like;
     private int dislike;
     private Double raiting;
@@ -60,29 +61,37 @@ public class User {
         this.name = name;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public LocationUser getLocationUser() {
+        return locationUser;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
+    public void setLocationUser(LocationUser locationUser) {
+        this.locationUser = locationUser;
     }
 
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Boolean getOnline() {
-        return online;
-    }
-
-    public void setOnline(Boolean online) {
-        this.online = online;
-    }
+    //    public Double getLatitude() {
+//        return latitude;
+//    }
+//
+//    public void setLatitude(Double latitude) {
+//        this.latitude = latitude;
+//    }
+//
+//    public Double getLongitude() {
+//        return longitude;
+//    }
+//
+//    public void setLongitude(Double longitude) {
+//        this.longitude = longitude;
+//    }
+//
+//    public Boolean getOnline() {
+//        return online;
+//    }
+//
+//    public void setOnline(Boolean online) {
+//        this.online = online;
+//    }
 
     public int getLike() {
         return like;
@@ -109,7 +118,8 @@ public class User {
     }
 
     protected void userToString() {
-        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLatitude " + getLatitude() + " getLongitude " + getLongitude() + " getOnline " + getOnline() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting());
+        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting()
+                + getLocationUser());
     }
 
     protected void userUpdate() {
@@ -138,8 +148,8 @@ public class User {
                     user.setRaiting(userDocument.getRaiting());
                     user.setLike(userDocument.getLike());
                     user.setDislike(userDocument.getDislike());
-                    user.setLongitude(userDocument.getLongitude());
-                    user.setLatitude(userDocument.getLatitude());
+                    user.locationUser.setLongitude(userDocument.locationUser.getLongitude());
+                    user.locationUser.setLatitude(userDocument.locationUser.getLatitude());
                     user.userToString();
                     user.toString();
                     //refreshFragment();
@@ -147,7 +157,7 @@ public class User {
                     user.setEmail(user_google_information.getEmail());
                     user.setName(user_google_information.getDisplayName());
                     user.setUid(user_google_information.getUid());
-                    user.setOnline(false);
+                    user.locationUser.setOnline(false);
                     user.userUpdate();
                     //Log.d(TAG, getString(R.string.firebase_upload));
                 }

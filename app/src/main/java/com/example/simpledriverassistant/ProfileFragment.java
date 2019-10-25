@@ -21,6 +21,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 
 public class ProfileFragment extends Fragment {
@@ -66,8 +67,8 @@ public class ProfileFragment extends Fragment {
         user_raiting.setText("Raiting: " + user.getRaiting());
         user_like.setText("Likes: " + user.getLike());
         user_dislike.setText("Dislikes: " + user.getDislike());
-        user_longitude.setText("Longitude: " + user.getLongitude());
-        user_latitude.setText("Lalitude: " + user.getLatitude());
+        user_longitude.setText("Longitude: " + locationUser.getLongitude());
+        user_latitude.setText("Lalitude: " + locationUser.getLatitude());
     }
 
     private void actionSetOnClickListener() {
@@ -80,6 +81,7 @@ public class ProfileFragment extends Fragment {
                 } else {
                     user_longitude.setVisibility(View.VISIBLE);
                     user_latitude.setVisibility(View.VISIBLE);
+                    setValueInCardview();
                     Toast.makeText(getContext(), "Tryb Developera ;)", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -114,8 +116,9 @@ public class ProfileFragment extends Fragment {
                     user.setEmail(user_google_information.getEmail());
                     user.setName(user_google_information.getDisplayName());
                     user.setUid(user_google_information.getUid());
-                    user.setOnline(false);
+                    locationUser.setOnline(false);
                     user.userUpdate();
+                    locationUser.userUpdate();
                     Log.d(TAG, getString(R.string.firebase_upload));
                 }
             }

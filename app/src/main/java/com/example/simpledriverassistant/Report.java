@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
+import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 
 public class Report {
@@ -80,8 +81,8 @@ public class Report {
     }
 
     protected boolean coordinatesNotNull() {
-        setLatitude(user.getLatitude());
-        setLongitude(user.getLongitude());
+        setLatitude(locationUser.getLatitude());
+        setLongitude(locationUser.getLongitude());
         if (latitude != null && longitude != null) {
             return true;
         } else {

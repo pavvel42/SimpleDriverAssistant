@@ -39,6 +39,7 @@ import com.google.firebase.functions.HttpsCallableResult;
 
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
+import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 import static com.example.simpledriverassistant.NotificationService.CHANNEL_ID;
 import static com.example.simpledriverassistant.R.layout.notification_view;
@@ -63,9 +64,9 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude());
-        user.setLatitude(location.getLatitude());
-        user.setLongitude(location.getLongitude());
-        user.userUpdate();
+        locationUser.setLatitude(location.getLatitude());
+        locationUser.setLongitude(location.getLongitude());
+        locationUser.userUpdate();
         Log.d(TAG, getString(R.string.firebase_upload));
     }
 
@@ -103,8 +104,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     public void onDestroy() {
         super.onDestroy();
         floatingActionButton.setVisibility(View.VISIBLE);
-        user.setOnline(false);
-        user.userUpdate();
+        locationUser.setOnline(false);
+        locationUser.userUpdate();
         locationManager.removeUpdates(this);
         Log.d(TAG, getString(R.string.firebase_upload));
     }
