@@ -18,11 +18,11 @@ public class LocationUser {
     private static final String TAG = LocationUser.class.getSimpleName();
     private Double latitude;
     private Double longitude;
-    private Boolean online;
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference;
+    private String email = user_google_information.getEmail();
 
     public LocationUser() {
     }
@@ -43,21 +43,21 @@ public class LocationUser {
         this.longitude = longitude;
     }
 
-    public Boolean getOnline() {
-        return online;
+    public String getEmail() {
+        return email;
     }
 
-    public void setOnline(Boolean online) {
-        this.online = online;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String locationUserToString() {
-        String string = " getLatitude " + getLatitude() + " getLongitude " + getLongitude() + " getOnline " + getOnline();
+        String string = " getLatitude " + getLatitude() + " getLongitude " + getLongitude() ;
         return string;
     }
 
     protected void userUpdate() {
-        db.collection("users").document(user_google_information.getEmail()).collection("report4user").document(user_google_information.getEmail()).set(this, SetOptions.merge())
+        db.collection("users").document(user_google_information.getEmail()).collection("locationUser").document(user_google_information.getEmail()).set(this, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

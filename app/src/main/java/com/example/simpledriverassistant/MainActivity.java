@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user.setEmail(user_google_information.getEmail());
         user.setName(user_google_information.getDisplayName());
         user.setUid(user_google_information.getUid());
-        locationUser.setOnline(state);
+        user.setOnline(state);
         user.userUpdate();
         Log.d(TAG, getString(R.string.firebase_upload));
     }

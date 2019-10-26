@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -98,14 +99,18 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         initVariables();
         onViewDisplay();
         setState(true);
+        report4UserListener();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         floatingActionButton.setVisibility(View.VISIBLE);
-        locationUser.setOnline(false);
+        user.setOnline(false);
+        locationUser.setLatitude(0.0);
+        locationUser.setLongitude(0.0);
         locationUser.userUpdate();
+        user.userUpdate();
         locationManager.removeUpdates(this);
         Log.d(TAG, getString(R.string.firebase_upload));
     }
@@ -178,7 +183,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         hide = expandableView.findViewById(R.id.hide);
     }
 
-    private void sendPromise() {
+    private void functionHttps() {
         mFunctions = FirebaseFunctions.getInstance();
 
         FirebaseFunctions.getInstance() // Optional region: .getInstance("europe-west1")
@@ -268,26 +273,21 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         }
     }
 
-    /*tylko probnie wstawiona*/
-    private void reportForUserListener() {
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+    /*Nasłuchiwanie kolekcji*/
+    private void report4UserListener() {
+        documentReference = db.document("users/"+user_google_information.getEmail()+"/report4user/currentReport");
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if ((e) != null ) {
                     return;
                 }
-
-                String data = "";
-
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    User userExample = documentSnapshot.toObject(User.class);
-                    //userExample.setDocumentId(documentSnapshot.getId());
-
-                    Double raitingEx = userExample.getRaiting();
-                    Log.d(TAG, "Raiting: " + raitingEx);
+                if(documentSnapshot.exists()){
+                    Report4User report4User = documentSnapshot.toObject(Report4User.class);
+                    setState(true);
+                    hideUp();
+                    report4User.report4UserToString();
                 }
-
-                //textViewData.setText(data);
             }
         });
     }

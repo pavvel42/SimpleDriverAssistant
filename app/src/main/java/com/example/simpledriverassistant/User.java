@@ -23,7 +23,7 @@ public class User {
     private String name;
     //    private Double latitude;
     //    private Double longitude;
-    //    private Boolean online;
+    private Boolean online;
     private LocationUser locationUser;
     private int like;
     private int dislike;
@@ -85,13 +85,13 @@ public class User {
 //        this.longitude = longitude;
 //    }
 //
-//    public Boolean getOnline() {
-//        return online;
-//    }
-//
-//    public void setOnline(Boolean online) {
-//        this.online = online;
-//    }
+    public Boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(Boolean online) {
+        this.online = online;
+    }
 
     public int getLike() {
         return like;
@@ -118,7 +118,7 @@ public class User {
     }
 
     protected void userToString() {
-        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting()
+        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting() + " getOnline " + getOnline()
                 + getLocationUser());
     }
 
@@ -157,7 +157,7 @@ public class User {
                     user.setEmail(user_google_information.getEmail());
                     user.setName(user_google_information.getDisplayName());
                     user.setUid(user_google_information.getUid());
-                    user.locationUser.setOnline(false);
+                    user.setOnline(false);
                     user.userUpdate();
                     //Log.d(TAG, getString(R.string.firebase_upload));
                 }

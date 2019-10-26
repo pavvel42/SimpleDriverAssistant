@@ -116,7 +116,7 @@ public class ProfileFragment extends Fragment {
                     user.setEmail(user_google_information.getEmail());
                     user.setName(user_google_information.getDisplayName());
                     user.setUid(user_google_information.getUid());
-                    locationUser.setOnline(false);
+                    user.setOnline(false);
                     user.userUpdate();
                     locationUser.userUpdate();
                     Log.d(TAG, getString(R.string.firebase_upload));
