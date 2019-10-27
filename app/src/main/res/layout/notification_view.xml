@@ -70,7 +70,7 @@
             android:columnCount="2"
             android:columnOrderPreserved="true"
             android:padding="3dp"
-            android:rowCount="4">
+            android:rowCount="3">
 
             <!-- [Row 1/////////////////////////////////////////////////////////////////////////////////////////////////////////////] -->
             <!-- Column 1.1 -->
@@ -159,8 +159,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:src="@drawable/ic_warning" />
 
@@ -212,7 +212,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="2dp">
 
@@ -224,8 +223,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:src="@drawable/ic_like" />
 
@@ -244,7 +243,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="2dp">
 
@@ -266,10 +264,19 @@
             </androidx.cardview.widget.CardView>
             <!-- [End Row 3/////////////////////////////////////////////////////////////////////////////////////////////////////////////] -->
 
-            <!-- [Row 4/////////////////////////////////////////////////////////////////////////////////////////////////////////////] -->
-            <!-- Column 4.1 -->
+        </GridLayout>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alignmentMode="alignMargins"
+            android:columnCount="4"
+            android:padding="3dp"
+            android:rowCount="1">
+
             <androidx.cardview.widget.CardView
-                android:id="@+id/radius"
+                android:id="@+id/radiusCV"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_rowWeight="1"
@@ -278,7 +285,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="2dp">
 
@@ -290,6 +296,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/radius"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/distance"
@@ -302,18 +309,16 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Column 4.2 -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/icon"
+                android:id="@+id/iconCV"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="2dp">
 
@@ -325,6 +330,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/iconAction4Report"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
@@ -333,8 +339,78 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-            <!-- [End Row 4/////////////////////////////////////////////////////////////////////////////////////////////////////////////] -->
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/user_raitingCV"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_raiting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/positive_button"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/emailCV"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
         </GridLayout>
+
 
         <GridLayout
             android:id="@+id/lastGrid"
@@ -395,7 +471,57 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/skip"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_margin="0dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_marginLeft="6dp"
+                            android:src="@drawable/ic_do_not_disturb" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
         </GridLayout>
+
 
     </LinearLayout>
 

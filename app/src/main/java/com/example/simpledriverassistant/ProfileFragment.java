@@ -104,9 +104,7 @@ public class ProfileFragment extends Fragment {
                 }
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
-                    user.setRaiting(userDocument.getRaiting());
-                    user.setLike(userDocument.getLike());
-                    user.setDislike(userDocument.getDislike());
+                    raiting4user(userDocument);
 //                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
 //                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
                     user.userToString();
@@ -123,5 +121,15 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void raiting4user(User userDocument){
+        user.setLike(userDocument.getLike());
+        user.setDislike(userDocument.getDislike());
+        if(userDocument.getLike()==0 || userDocument.getDislike()==0){
+            user.setRaiting(0.0);
+        } else {
+            user.setRaiting(Double.valueOf(userDocument.getLike())/Double.valueOf(userDocument.getDislike()));
+        }
     }
 }

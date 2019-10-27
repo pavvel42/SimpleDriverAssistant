@@ -15,7 +15,8 @@
     <string name="positive_button">OK</string>
     <string name="close">Close</string>
     <string name="choose_action">Choose Action</string>
-    <string name="hide">Hide</string>
+    <string name="hide">Hide View</string>
+    <string name="skip">Skip Report</string>
     <string name="distance">500m</string>
     <string name="your_profile">Your profile</string>
     <string name="raiting">Raiting: </string>

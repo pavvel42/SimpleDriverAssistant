@@ -5,12 +5,13 @@ import android.util.Log;
 public class Report4User {
 
     private static final String TAG = Report4User.class.getSimpleName();
-    private String broadcaster ;
+    private String broadcaster;
+    private String reportid;
     private Double latitudeReport;
     private Double longitudeReport;
     private Double distance;
     private String action;
-    private Double raiting ;
+    private Double raiting;
 
     public Report4User() {
     }
@@ -21,6 +22,14 @@ public class Report4User {
 
     public void setBroadcaster(String broadcaster) {
         this.broadcaster = broadcaster;
+    }
+
+    public String getReportid() {
+        return reportid;
+    }
+
+    public void setReportid(String reportid) {
+        this.reportid = reportid;
     }
 
     public Double getLatitudeReport() {
@@ -64,6 +73,6 @@ public class Report4User {
     }
 
     protected void report4UserToString() {
-        Log.d(TAG, "getBroadcaster " + getBroadcaster() + " getAction " + getAction() + " getRaiting " + getRaiting() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
+        Log.d(TAG, "getBroadcaster " + getBroadcaster() +" getReportid " + getReportid() +  " getAction " + getAction() + " getRaiting " + getRaiting() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
     }
 }
