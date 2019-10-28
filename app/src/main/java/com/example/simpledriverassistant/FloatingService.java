@@ -35,8 +35,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
@@ -65,6 +63,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     private Report report = new Report();
     private CurrentTime currentTime = new CurrentTime();
     private Report4User report4User;
+    private User userBroadcaster;
     private ArrayList<String> reportsID = new ArrayList<String>();
     View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, dislike, hide,
             radiusCV, iconCV, user_raitingCV, emailCV, skip;
@@ -78,8 +77,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         locationUser.setLatitude(location.getLatitude());
         locationUser.setLongitude(location.getLongitude());
         locationUser.userUpdate();
-        if(report4User != null){
-            currentDistance();
+        if (report4User != null) {
+            currentDistance(location.getLatitude(), location.getLongitude(), report4User.getLatitudeReport(), report4User.getLongitudeReport());
         }
         //liczenie aktulnego dystansu?
         Log.d(TAG, getString(R.string.firebase_upload));
@@ -112,7 +111,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         super.setTouchListener();
         initVariables();
         onViewDisplay();
-        setState(true);
+        //setState(true);
         report4UserListener();
     }
 
@@ -125,6 +124,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         locationUser.setLongitude(0.0);
         locationUser.userUpdate();
         user.userUpdate();
+        deleteReport4User();
         locationManager.removeUpdates(this);
         Log.d(TAG, getString(R.string.firebase_upload));
     }
@@ -268,13 +268,15 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideDown();
+                uploadRateUser(1);
+                //hideDown();
             }
         });
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideDown();
+                uploadRateUser(-1);
+                //hideDown();
             }
         });
         hide.setOnClickListener(new View.OnClickListener() {
@@ -286,7 +288,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setState(false);
+                uploadRateUser(0);
+                //setState(false);
             }
         });
     }
@@ -308,7 +311,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         }
     }
 
-    private void responseToTheReport(){
+    private void responseToTheReport() {
 
     }
 
@@ -337,25 +340,25 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         });
     }
 
-    private void createReport4User(DocumentSnapshot documentSnapshot){
+    private void createReport4User(DocumentSnapshot documentSnapshot) {
         report4User = documentSnapshot.toObject(Report4User.class);
-        radius.setText(Math.round(report4User.getDistance())+"m");
+        radius.setText(Math.round(report4User.getDistance()) + "m");
         user_raiting.setText(String.valueOf(report4User.getRaiting()));
         email.setText(report4User.getBroadcaster());
-        switch (report4User.getAction()){
-            case "carAccident":{
+        switch (report4User.getAction()) {
+            case "carAccident": {
                 iconAction4Report.setImageResource(R.drawable.ic_car_crash);
                 break;
             }
-            case "speedCamera":{
+            case "speedCamera": {
                 iconAction4Report.setImageResource(R.drawable.ic_speed_camera);
                 break;
             }
-            case "roadworks":{
+            case "roadworks": {
                 iconAction4Report.setImageResource(R.drawable.ic_traffic_cone);
                 break;
             }
-            case "roadsideInspection":{
+            case "roadsideInspection": {
                 iconAction4Report.setImageResource(R.drawable.ic_warning);
                 break;
             }
@@ -366,14 +369,51 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         setState(true);
         hideUp();
         report4User.report4UserToString();
+        userBroadcaster = new User(report4User.getBroadcaster());
+        userBroadcaster.userDownloadOnes();
     }
 
-    private void currentDistance(){
-        float[] tablica = new float[10];
-        location.distanceBetween(11.2,11.2,12.2,12.2,tablica);
-        for (int i = 0;i<tablica.length;i++){
-            Log.d(TAG,"element "+i+" to "+tablica[i]);
+    private void uploadRateUser(int state) {
+        documentReference = db.collection("users").document(userBroadcaster.getEmail());
+        switch (state) {
+            case 1: {
+                documentReference.update("like", userBroadcaster.getLike() + 1);
+                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_review), Toast.LENGTH_LONG).show();
+                deleteReport4User();
+                break;
+            }
+            case -1: {
+                documentReference.update("dislike", userBroadcaster.getDislike() + 1);
+                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_review), Toast.LENGTH_LONG).show();
+                deleteReport4User();
+                break;
+            }
+            default: {
+                deleteReport4User();
+            }
         }
+        userBroadcaster = null;
+    }
+
+    private void deleteReport4User() {
+        documentReference = db.collection("users").document(user_google_information.getEmail())
+                .collection("report4user").document("currentReport");
+        documentReference.delete();
+        report4User = null;
+        setState(false);
+        hideDown();
+    }
+
+
+    private void currentDistance(Double stLati, Double stLong, Double endLati, Double endLong) {
+        float[] tablica = new float[2];
+        location.distanceBetween(stLati, stLong, endLati, endLong, tablica);
+        for (int i = 0; i < tablica.length; i++) {
+            Log.d(TAG, "Element tablicy " + i + " to " + tablica[i]);
+        }
+        report4User.setDistance(Double.valueOf(tablica[0]));
+        radius.setText(Math.round(report4User.getDistance()) + "m");
+        tablica = null;
     }
 
     private void hideUp() {

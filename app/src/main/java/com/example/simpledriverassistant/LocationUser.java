@@ -52,7 +52,7 @@ public class LocationUser {
     }
 
     public String locationUserToString() {
-        String string = " getLatitude " + getLatitude() + " getLongitude " + getLongitude() ;
+        String string = " getLatitude " + getLatitude() + " getLongitude " + getLongitude();
         return string;
     }
 

@@ -123,13 +123,13 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void raiting4user(User userDocument){
+    private void raiting4user(User userDocument) {
         user.setLike(userDocument.getLike());
         user.setDislike(userDocument.getDislike());
-        if(userDocument.getLike()==0 || userDocument.getDislike()==0){
+        if (userDocument.getLike() == 0 || userDocument.getDislike() == 0) {
             user.setRaiting(0.0);
         } else {
-            user.setRaiting(Double.valueOf(userDocument.getLike())/Double.valueOf(userDocument.getDislike()));
+            user.setRaiting(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
         }
     }
 }

@@ -14,8 +14,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import static com.example.simpledriverassistant.MainActivity.user;
-
 public class User {
 
     private String email;
@@ -35,6 +33,10 @@ public class User {
     private DocumentReference documentReference;
 
     public User() {
+    }
+
+    public User(String email) {
+        this.email = email;
     }
 
     public String getEmail() {
@@ -139,27 +141,16 @@ public class User {
         userToString();
     }
 
-    private void userDownloadOnes() {
+    protected void userDownloadOnes() {
+        documentReference = db.collection("users").document(getEmail());
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
-                    user.setRaiting(userDocument.getRaiting());
-                    user.setLike(userDocument.getLike());
-                    user.setDislike(userDocument.getDislike());
-                    user.locationUser.setLongitude(userDocument.locationUser.getLongitude());
-                    user.locationUser.setLatitude(userDocument.locationUser.getLatitude());
-                    user.userToString();
-                    user.toString();
+                    setLike(userDocument.getLike());
+                    setDislike(userDocument.getDislike());
                     //refreshFragment();
-                } else {
-                    user.setEmail(user_google_information.getEmail());
-                    user.setName(user_google_information.getDisplayName());
-                    user.setUid(user_google_information.getUid());
-                    user.setOnline(false);
-                    user.userUpdate();
-                    //Log.d(TAG, getString(R.string.firebase_upload));
                 }
                 Log.d(TAG, "Dane zostały zapisane");
             }

@@ -73,6 +73,6 @@ public class Report4User {
     }
 
     protected void report4UserToString() {
-        Log.d(TAG, "getBroadcaster " + getBroadcaster() +" getReportid " + getReportid() +  " getAction " + getAction() + " getRaiting " + getRaiting() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
+        Log.d(TAG, "getBroadcaster " + getBroadcaster() + " getReportid " + getReportid() + " getAction " + getAction() + " getRaiting " + getRaiting() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
     }
 }

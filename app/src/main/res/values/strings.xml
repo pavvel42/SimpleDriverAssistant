@@ -28,6 +28,7 @@
     <string name="firebase_download">Firebase User Object Download Start</string>
     <string name="refresh_fragment">Refresh Fragment</string>
     <string name="send_report">Send Report</string>
+    <string name="thx_for_review">Send Review</string>
     <!--    <string name=""> </string>-->
 
     <!--    getString(R.string)-->
