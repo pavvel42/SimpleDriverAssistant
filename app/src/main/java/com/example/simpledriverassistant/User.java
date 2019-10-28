@@ -120,8 +120,7 @@ public class User {
     }
 
     protected void userToString() {
-        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting() + " getOnline " + getOnline()
-                + getLocationUser());
+        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting() + " getOnline " + getOnline() + getLocationUser());
     }
 
     protected void userUpdate() {
