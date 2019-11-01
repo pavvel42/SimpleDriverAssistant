@@ -2,6 +2,8 @@ package com.example.simpledriverassistant;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -74,13 +78,19 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude());
-        locationUser.setLatitude(location.getLatitude());
-        locationUser.setLongitude(location.getLongitude());
-        locationUser.userUpdate();
+        report.setLatitude(location.getLatitude());
+        report.setLongitude(location.getLongitude());
+        //Toast.makeText(getApplicationContext(), "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+        if (locationUser != null) {
+            locationUser.setLatitude(location.getLatitude());
+            locationUser.setLongitude(location.getLongitude());
+            locationUser.userUpdate();
+        } else {
+            locationUserUpdate(location.getLatitude(), location.getLongitude());
+        }
         if (report4User != null) {
             currentDistance(location.getLatitude(), location.getLongitude(), report4User.getLatitudeReport(), report4User.getLongitudeReport());
         }
-        //liczenie aktulnego dystansu?
         Log.d(TAG, getString(R.string.firebase_upload));
     }
 
@@ -135,7 +145,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.app_name)).setContentText(input).setSmallIcon(R.drawable.bubble_default_icon).setContentIntent(pendingIntent).build();
+                .setContentTitle(getString(R.string.app_name)).setContentText(input).setSmallIcon(R.drawable.ic_icon_car_forground).setContentIntent(pendingIntent).build();
         startForeground(1, notification);
         tracking();
         return super.onStartCommand(intent, flags, Service.START_NOT_STICKY);
@@ -311,8 +321,10 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         }
     }
 
-    private void responseToTheReport() {
-
+    private void locationUserUpdate(Double latitude, Double longitude) {
+        documentReference = db.document("users/" + user_google_information.getEmail() + "/locationUser/" + user_google_information.getEmail());
+        documentReference.update("latitude", latitude);
+        documentReference.update("longitude", longitude);
     }
 
     /*Nasłuchiwanie kolekcji*/
