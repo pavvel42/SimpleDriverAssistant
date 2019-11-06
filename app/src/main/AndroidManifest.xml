@@ -18,7 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".FloatingService" />
-
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
