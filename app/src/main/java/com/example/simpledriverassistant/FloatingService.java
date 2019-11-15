@@ -14,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -44,6 +45,7 @@ import com.google.firebase.functions.HttpsCallableResult;
 
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
 import static com.example.simpledriverassistant.MainActivity.locationUser;
@@ -69,6 +71,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     private Report4User report4User;
     private User userBroadcaster;
     private ArrayList<String> reportsID = new ArrayList<String>();
+    private TextToSpeech mTTS;
     View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, dislike, hide,
             radiusCV, iconCV, user_raitingCV, emailCV, skip;
     TextView radius, user_raiting, email;
@@ -136,6 +139,10 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         user.userUpdate();
         deleteReport4User();
         locationManager.removeUpdates(this);
+        if (mTTS != null) {
+            mTTS.stop();
+            mTTS.shutdown();
+        }
         Log.d(TAG, getString(R.string.firebase_upload));
     }
 
@@ -148,6 +155,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 .setContentTitle(getString(R.string.app_name)).setContentText(input).setSmallIcon(R.drawable.ic_icon_car_forground).setContentIntent(pendingIntent).build();
         startForeground(1, notification);
         tracking();
+        textToSpeechListener();
         return super.onStartCommand(intent, flags, Service.START_NOT_STICKY);
     }
 
@@ -316,10 +324,42 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
             Log.d(TAG, getString(R.string.send_report));
             setState(false);
             Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
+            speak(action);
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.lost_gps), Toast.LENGTH_LONG).show();
         }
     }
+
+    private void textToSpeechListener(){
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status == TextToSpeech.SUCCESS){
+                    int result = mTTS.setLanguage(Locale.GERMAN);
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Language not supported");
+
+                    //mTTS.setLanguage(Locale.getDefault());
+                    }
+                } else {
+                    Log.e(TAG+" TTS", "Initialization failed");
+                }
+            }
+        });
+    }
+
+    private void speak(String action) {
+        float pitch = 1;
+        float speed = 1;
+
+        mTTS.setPitch(pitch);
+        mTTS.setSpeechRate(speed);
+
+        mTTS.speak("You report "+action,TextToSpeech.QUEUE_FLUSH,null,null);
+    }
+
 
     private void locationUserUpdate(Double latitude, Double longitude) {
         documentReference = db.document("users/" + user_google_information.getEmail() + "/locationUser/" + user_google_information.getEmail());
@@ -392,12 +432,14 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 documentReference.update("like", userBroadcaster.getLike() + 1);
                 Toast.makeText(getApplicationContext(), getString(R.string.thx_for_review), Toast.LENGTH_LONG).show();
                 deleteReport4User();
+                speak("Thank you for the feedback");
                 break;
             }
             case -1: {
                 documentReference.update("dislike", userBroadcaster.getDislike() + 1);
                 Toast.makeText(getApplicationContext(), getString(R.string.thx_for_review), Toast.LENGTH_LONG).show();
                 deleteReport4User();
+                speak("Thank you for the feedback");
                 break;
             }
             default: {
