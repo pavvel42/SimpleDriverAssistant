@@ -81,9 +81,7 @@ public class Report {
     }
 
     protected boolean coordinatesNotNull() {
-        setLatitude(locationUser.getLatitude());
-        setLongitude(locationUser.getLongitude());
-        if (latitude != null && longitude != null) {
+        if (getLatitude() != null && getLongitude() != null) {
             return true;
         } else {
             return false;
