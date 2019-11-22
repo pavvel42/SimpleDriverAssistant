@@ -12,11 +12,12 @@
     <string name="thx_for_persmission">Dziękuję za przyzanie uprawnień, możesz korzystać z aplikacji</string>
     <string name="service_channel">Service Channel</string>
     <string name="information">Information</string>
-    <string name="positive_button">OK</string>
+    <string name="positive_button" translatable="false">OK</string>
     <string name="close">Close</string>
     <string name="choose_action">Choose Action</string>
     <string name="hide">Hide View</string>
     <string name="skip">Skip Report</string>
+    <string name="delete_report">Delete</string>
     <string name="distance">500m</string>
     <string name="your_profile">Your profile</string>
     <string name="raiting">Raiting: </string>
@@ -29,6 +30,7 @@
     <string name="refresh_fragment">Refresh Fragment</string>
     <string name="send_report">Send Report</string>
     <string name="thx_for_review">Send Review</string>
+    <string name="time_report">Time report:</string>
     <!--    <string name=""> </string>-->
 
     <!--    getString(R.string)-->

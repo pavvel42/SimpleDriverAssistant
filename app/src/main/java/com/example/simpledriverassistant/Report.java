@@ -23,6 +23,7 @@ public class Report {
     private Double latitude;
     private Double longitude;
     private String action;
+    private int mImageResource;
     private Double raiting = user.getRaiting();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -30,6 +31,13 @@ public class Report {
     private DocumentReference documentReference;
 
     public Report() {
+    }
+
+    public Report(int mImageResource, Long time, Double latitude, Double longitude) {
+        this.mImageResource = mImageResource;
+        this.time = time;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getEmail() {
@@ -62,6 +70,14 @@ public class Report {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getmImageResource() {
+        return mImageResource;
+    }
+
+    public void setmImageResource(int mImageResource) {
+        this.mImageResource = mImageResource;
     }
 
     public String getAction() {
