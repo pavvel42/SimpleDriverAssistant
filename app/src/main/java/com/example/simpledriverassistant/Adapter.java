@@ -28,15 +28,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mReportAction;
         public View mDeleteReport;
-        public TextView reportAction, reportLatitude, reportLongitude;
+        public TextView reportTime, reportLatitude, reportLongitude;
 
         public ViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             mReportAction = itemView.findViewById(R.id.report_action);
             mDeleteReport = itemView.findViewById(R.id.report_delete);
-            reportAction = itemView.findViewById(R.id.report_latitude);
-            reportLatitude = itemView.findViewById(R.id.report_longitude);
-            reportLongitude = itemView.findViewById(R.id.report_time);
+            reportTime = itemView.findViewById(R.id.report_time);
+            reportLatitude = itemView.findViewById(R.id.report_latitude);
+            reportLongitude = itemView.findViewById(R.id.report_longitude);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,9 +81,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         Report currentItem = mList.get(position);
 
         holder.mReportAction.setImageResource(currentItem.getmImageResource());
-        holder.reportAction.setText(currentItem.getAction());
-        holder.reportLatitude.setText(currentItem.getLatitude()+"");
-        holder.reportLongitude.setText(currentItem.getLongitude()+"");
+        holder.reportTime.setText("Time: " + currentItem.getTime());
+        holder.reportLatitude.setText("Lalitude: " + currentItem.getLatitude() + "");
+        holder.reportLongitude.setText("Longitude: " + currentItem.getLongitude() + "");
     }
 
     @Override
