@@ -64,34 +64,33 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/user_raiting"
+                            android:id="@+id/user_like"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@string/raiting"
+                            android:text="@string/like"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/user_latitude"
+                            android:id="@+id/user_unlike"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@string/latitude"
+                            android:text="@string/dislike"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
                             android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:visibility="invisible" />
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/user_like"
+                            android:id="@+id/user_raiting"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@string/like"
+                            android:text="@string/raiting"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
                             android:textSize="18sp"
@@ -110,15 +109,16 @@
                             android:visibility="invisible" />
 
                         <TextView
-                            android:id="@+id/user_unlike"
+                            android:id="@+id/user_latitude"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@string/dislike"
+                            android:text="@string/latitude"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:visibility="invisible" />
 
                     </LinearLayout>
 

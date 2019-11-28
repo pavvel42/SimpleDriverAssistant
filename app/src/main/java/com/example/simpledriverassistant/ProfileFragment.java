@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
 //        user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
 //        user_latitude.setText(getString(R.string.latitude) + user.getLatitude());
 
-        user_raiting.setText("Raiting: " + user.getRaiting());
+        user_raiting.setText("Raiting: " + String.format("%.2g%n", user.getRaiting()));
         user_like.setText("Likes: " + user.getLike());
         user_dislike.setText("Dislikes: " + user.getDislike());
         user_longitude.setText("Longitude: " + locationUser.getLongitude());
@@ -82,7 +82,7 @@ public class ProfileFragment extends Fragment {
                     user_longitude.setVisibility(View.VISIBLE);
                     user_latitude.setVisibility(View.VISIBLE);
                     setValueInCardview();
-                    Toast.makeText(getContext(), "Tryb Developera ;)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Dev Mode", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -41,18 +41,31 @@
 
                     <ImageView
                         android:id="@+id/report_action"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:src="@drawable/ic_speed_camera" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:orientation="vertical"
                         android:padding="1dp">
+
+                        <TextView
+                            android:id="@+id/report_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="2"
+                            android:layout_margin="5dp"
+                            android:text="@string/time_report"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/report_latitude"
@@ -62,7 +75,7 @@
                             android:text="@string/latitude"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
-                            android:textSize="13sp"
+                            android:textSize="10sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -73,18 +86,7 @@
                             android:text="@string/longitude"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/report_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="@string/time_report"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text"
-                            android:textSize="13sp"
+                            android:textSize="10sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>

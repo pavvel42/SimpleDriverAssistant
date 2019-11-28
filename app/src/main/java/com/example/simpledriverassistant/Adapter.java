@@ -81,7 +81,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         Report currentItem = mList.get(position);
 
         holder.mReportAction.setImageResource(currentItem.getmImageResource());
-        holder.reportTime.setText("Time: " + currentItem.getTime());
+        holder.reportTime.setText("Minutes Ago: " + currentItem.getTime());
         holder.reportLatitude.setText("Lalitude: " + currentItem.getLatitude() + "");
         holder.reportLongitude.setText("Longitude: " + currentItem.getLongitude() + "");
     }

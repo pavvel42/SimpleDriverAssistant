@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new ProfileFragment()).commit();
                 break;
             case R.id.nav_info:
+
                 Toast.makeText(this, "Information", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:

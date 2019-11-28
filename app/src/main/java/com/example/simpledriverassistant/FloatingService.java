@@ -12,6 +12,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -324,42 +327,64 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
             Log.d(TAG, getString(R.string.send_report));
             setState(false);
             Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
-            speak(action);
+            speakToUser(action, null);
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.lost_gps), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void textToSpeechListener(){
+    private void speakToUser(String action, Double meters) {
+        switch (action) {
+            case "carAccident": {
+                action = getString(R.string.tts_carAccident);
+                break;
+            }
+            case "speedCamera": {
+                iconAction4Report.setImageResource(R.drawable.ic_speed_camera);
+                break;
+            }
+            case "roadworks": {
+                iconAction4Report.setImageResource(R.drawable.ic_traffic_cone);
+                break;
+            }
+            case "roadsideInspection": {
+                iconAction4Report.setImageResource(R.drawable.ic_warning);
+                break;
+            }
+        }
+        if (meters != null) {
+            mTTS.speak(action + Math.round(meters) + getString(R.string.tts_meters), TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            mTTS.speak(getString(R.string.send_report) + action, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+
+    }
+
+    private void textToSpeechListener() {
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status == TextToSpeech.SUCCESS){
+                if (status == TextToSpeech.SUCCESS) {
                     int result = mTTS.setLanguage(Locale.ENGLISH);
 
                     if (result == TextToSpeech.LANG_MISSING_DATA
                             || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "Language not supported");
 
-                    //mTTS.setLanguage(Locale.getDefault());
+                        //mTTS.setLanguage(Locale.getDefault());
                     }
                 } else {
-                    Log.e(TAG+" TTS", "Initialization failed");
+                    Log.e(TAG + " TTS", "Initialization failed");
                 }
             }
         });
-    }
 
-    private void speak(String action) {
-        float pitch = 1;
+        float pitch = 1.1f;
         float speed = 1;
 
         mTTS.setPitch(pitch);
         mTTS.setSpeechRate(speed);
-
-        mTTS.speak("You report "+action,TextToSpeech.QUEUE_FLUSH,null,null);
     }
-
 
     private void locationUserUpdate(Double latitude, Double longitude) {
         documentReference = db.document("users/" + user_google_information.getEmail() + "/locationUser/" + user_google_information.getEmail());
@@ -392,10 +417,19 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         });
     }
 
+    private Double tooLong(Double distance) {
+        if (distance > 500) {
+            return Double.valueOf(500);
+        } else {
+            return distance;
+        }
+    }
+
     private void createReport4User(DocumentSnapshot documentSnapshot) {
         report4User = documentSnapshot.toObject(Report4User.class);
-        radius.setText(Math.round(report4User.getDistance()) + "m");
-        user_raiting.setText(String.valueOf(report4User.getRaiting()));
+//        radius.setText(Math.round(report4User.getDistance()) + "m");
+        radius.setText(tooLong(report4User.getDistance()) + "m");
+        user_raiting.setText(String.format("%.2g%n", report4User.getRaiting()));
         email.setText(report4User.getBroadcaster());
         switch (report4User.getAction()) {
             case "carAccident": {
@@ -423,6 +457,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         report4User.report4UserToString();
         userBroadcaster = new User(report4User.getBroadcaster());
         userBroadcaster.userDownloadOnes();
+        speakToUser(report4User.getAction(), report4User.getDistance());
     }
 
     private void uploadRateUser(int state) {
@@ -430,16 +465,14 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         switch (state) {
             case 1: {
                 documentReference.update("like", userBroadcaster.getLike() + 1);
-                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_review), Toast.LENGTH_LONG).show();
                 deleteReport4User();
-                speak("Thank you for the feedback");
+                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_feedback), Toast.LENGTH_LONG).show();
                 break;
             }
             case -1: {
                 documentReference.update("dislike", userBroadcaster.getDislike() + 1);
-                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_review), Toast.LENGTH_LONG).show();
                 deleteReport4User();
-                speak("Thank you for the feedback");
+                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_feedback), Toast.LENGTH_LONG).show();
                 break;
             }
             default: {
@@ -457,7 +490,6 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         setState(false);
         hideDown();
     }
-
 
     private void currentDistance(Double stLati, Double stLong, Double endLati, Double endLong) {
         float[] tablica = new float[2];

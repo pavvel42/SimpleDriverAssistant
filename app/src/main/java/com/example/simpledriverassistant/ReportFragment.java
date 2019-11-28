@@ -35,6 +35,7 @@ public class ReportFragment extends Fragment {
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("report");
+    private CurrentTime currentTime = new CurrentTime();
 
     @Nullable
     @Override
@@ -80,8 +81,10 @@ public class ReportFragment extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, "Collection" + document.getId() + " => " + document.getData());
                         Report report = document.toObject(Report.class);
-                        if(report.getEmail().equals(user_google_information.getEmail())){
-                            exampleList.add(new Report(setImageInReportFragment(report.getAction()), report.getTime(), report.getLatitude(), report.getLongitude()));
+                        if (report.getEmail().equals(user_google_information.getEmail())) {
+                            Long diff = currentTime.milliseconds() - report.getTime();
+                            Long minutes = currentTime.convertMillisecondsToMinutes(diff);
+                            exampleList.add(new Report(setImageInReportFragment(report.getAction()), minutes, report.getLatitude(), report.getLongitude()));
                             mAdapter.notifyDataSetChanged();
                         }
                     }
