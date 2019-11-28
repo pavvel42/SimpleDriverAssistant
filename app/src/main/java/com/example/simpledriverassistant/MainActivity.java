@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -45,6 +47,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private final String SERVICE_NAME = "com.example.simpledriverassistant.FloatingService";
     private GoogleSignInClient mGoogleSignInClient;
     protected static LocationUser locationUser = new LocationUser();
     protected static User user = new User();
@@ -72,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /*Inicjowanie zmiennych*/
     private void initVariables() {
         floatingActionButton = findViewById(R.id.floating_button);
+        if (isServiceRunning() == true) {
+            Toast.makeText(getApplicationContext(), "RUNNING", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "RUNNING");
+            floatingActionButton.setVisibility(View.INVISIBLE);
+        } else {
+            Log.d(TAG, "NOT RUNNING");
+        }
     }
 
     /*Budowanie Layoutu*/
@@ -125,21 +135,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //              Toast.makeText(getApplicationContext(), "SNACK BAR", Toast.LENGTH_LONG).show();
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (FloatingBubblePermissions.requiresPermission(MainActivity.this) == false) /*jesli przyznano permission*/ {
-                    if (checkPerm() == true /*&& locationManager.isLocationEnabled()*/) {
+                    if (checkPerm() == true /* && locationManager.isLocationEnabled()*/) {
                         if (/*locationManager.isLocationEnabled() == false*/locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
                             Intent intent_action_location_source_settings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            InfoDialog exampleDialog = new InfoDialog(getString(R.string.pls_turn_on_gps), intent_action_location_source_settings);
-                            exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                            InfoDialog dialog = new InfoDialog(getString(R.string.pls_turn_on_gps), intent_action_location_source_settings);
+                            dialog.show(getSupportFragmentManager(), "intent_action_location_source_settings dialog");
                         } else if (networkStateReceiver.haveNetworkConnection(MainActivity.this) == false) {
-                            Intent intent_action_location_source_settings = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
-                            InfoDialog exampleDialog = new InfoDialog(getString(R.string.pls_turn_on_network_connection), intent_action_location_source_settings);
-                            exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                            Intent intent_action_network_operator_settings = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+                            InfoDialog dialog = new InfoDialog(getString(R.string.pls_turn_on_network_connection), intent_action_network_operator_settings);
+                            dialog.show(getSupportFragmentManager(), "intent_action_network_operator_settings dialog");
                         } else {
                             startService();
                         }
                     }
                 } else {
-                    FloatingBubblePermissions.startPermissionRequest(MainActivity.this);
+                    Intent intent_action_manage_overlay_permission = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + MainActivity.this.getPackageName()));
+                    InfoDialog dialog = new InfoDialog(getString(R.string.app_need_permission), intent_action_manage_overlay_permission);
+                    dialog.show(getSupportFragmentManager(), "intent_action_manage_overlay_permission dialog");
+                    //FloatingBubblePermissions.startPermissionRequest(MainActivity.this);
                 }
             }
         });
@@ -228,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new ProfileFragment()).commit();
                 break;
             case R.id.nav_info:
-
                 Toast.makeText(this, "Information", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:
@@ -257,12 +269,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         floatingActionButton.setVisibility(View.INVISIBLE);
     }
 
-
     /*Stop usługi*/
     public void stopService() {
         //onDestroy(); //trzeba spawdzić czy usługa istnieje
         Intent serviceIntent = new Intent(this, FloatingService.class); //główna usługa
         stopService(serviceIntent);
+    }
+
+    private boolean isServiceRunning() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (SERVICE_NAME.equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -277,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (EasyPermissions.hasPermissions(this, perms)) {
             return true;
         } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.need_permission), 123, perms);
+            EasyPermissions.requestPermissions(this, getString(R.string.app_need_permission), 123, perms);
             return false;
         }
     }

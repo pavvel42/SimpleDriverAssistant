@@ -32,7 +32,7 @@ public class InfoDialog extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.information))
                 .setMessage(getInfo())
                 .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {

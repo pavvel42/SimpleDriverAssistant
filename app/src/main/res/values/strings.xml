@@ -4,12 +4,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="firebase_login">Firebase Login</string>
     <string name="login_with_google">Login with Google</string>
-    <string name="pls_turn_on_gps">Proszę włączyć GPS</string>
-    <string name="lost_gps">Brak zasięgu GPS</string>
-    <string name="pls_turn_on_network_connection">Proszę włączyć połączenie internetowe</string>
-    <string name="click_to_return">Kliknij, aby powrócić</string>
-    <string name="need_permission">Potrzeba odpowiednich uprawień do poprawnego działania aplikacji</string>
-    <string name="thx_for_persmission">Dziękuję za przyzanie uprawnień, możesz korzystać z aplikacji</string>
+    <string name="pls_turn_on_gps">Please turn on GPS</string>
+    <string name="lost_gps">No GPS connection</string>
+    <string name="pls_turn_on_network_connection">No network connection</string>
+    <string name="click_to_return">Click to return</string>
+    <string name="app_need_permission">App need permission</string>
+    <string name="thx_for_persmission">Thanks for permission</string>
     <string name="service_channel">Service Channel</string>
     <string name="information">Information</string>
     <string name="positive_button" translatable="false">OK</string>
@@ -37,6 +37,7 @@
     <string name="tts_roadworks"> Roadworks </string>
     <string name="tts_meters"> meters</string>
     <string name="thx_for_feedback">Thanks you for the feedback</string>
+
     <!--    <string name=""> </string>-->
 
     <!--    getString(R.string)-->
