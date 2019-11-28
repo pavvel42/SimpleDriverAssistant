@@ -499,6 +499,10 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         }
         report4User.setDistance(Double.valueOf(tablica[0]));
         radius.setText(Math.round(report4User.getDistance()) + "m");
+        if (tablica[0] > 5000000) {
+            uploadRateUser(0);
+            Log.d(TAG, "performClick " + tablica[0]);
+        }
         tablica = null;
     }
 
