@@ -58,7 +58,7 @@ public class ReportFragment extends Fragment {
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(getContext(), "Position: " + exampleList.get(position).getAction(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Position: " + exampleList.get(position).getAction(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initVariables() {
         floatingActionButton = findViewById(R.id.floating_button);
         if (isServiceRunning() == true) {
-            Toast.makeText(getApplicationContext(), "RUNNING", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "RUNNING", Toast.LENGTH_LONG).show();
             Log.d(TAG, "RUNNING");
             floatingActionButton.setVisibility(View.INVISIBLE);
         } else {

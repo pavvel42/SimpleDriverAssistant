@@ -326,7 +326,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
             report.reportUpdate();
             Log.d(TAG, getString(R.string.send_report));
             setState(false);
-            Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
             speakToUser(action, null);
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.lost_gps), Toast.LENGTH_LONG).show();
