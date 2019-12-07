@@ -5,9 +5,11 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,6 +17,7 @@ import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -35,6 +38,7 @@ import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -45,8 +49,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
+import com.google.gson.Gson;
 
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -129,11 +135,13 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         onViewDisplay();
         //setState(true);
         report4UserListener();
+        loadData();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        saveData();
         floatingActionButton.setVisibility(View.VISIBLE);
         user.setOnline(false);
         locationUser.setLatitude(0.0);
@@ -223,9 +231,9 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         user_raitingCV.setVisibility(View.GONE);
         emailCV = expandableView.findViewById(R.id.emailCV);
         emailCV.setVisibility(View.GONE);
-        hide = expandableView.findViewById(R.id.hide);
         skip = expandableView.findViewById(R.id.skip);
         skip.setVisibility(View.GONE);
+        hide = expandableView.findViewById(R.id.hide);
         radius = expandableView.findViewById(R.id.radius);
         user_raiting = expandableView.findViewById(R.id.user_raiting);
         email = expandableView.findViewById(R.id.email);
@@ -426,6 +434,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     }
 
     private void createReport4User(DocumentSnapshot documentSnapshot) {
+        setState(true);
         report4User = documentSnapshot.toObject(Report4User.class);
 //        radius.setText(Math.round(report4User.getDistance()) + "m");
         radius.setText(tooLong(report4User.getDistance()) + "m");
@@ -452,12 +461,12 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 iconAction4Report.setImageResource(R.drawable.ic_info);
             }
         }
-        setState(true);
         hideUp();
         report4User.report4UserToString();
         userBroadcaster = new User(report4User.getBroadcaster());
         userBroadcaster.userDownloadOnes();
         speakToUser(report4User.getAction(), report4User.getDistance());
+
     }
 
     private void uploadRateUser(int state) {
@@ -504,6 +513,32 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
             Log.d(TAG, "performClick " + tablica[0]);
         }
         tablica = null;
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        if(!reportsID.isEmpty()){
+            String lastReportID = reportsID.get(reportsID.size()-1);
+            reportsID.clear();
+            reportsID.add(lastReportID);
+        }
+        String json = gson.toJson(reportsID);
+        editor.putString("task list", json);
+        editor.apply();
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("task list", null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        reportsID = gson.fromJson(json, type);
+
+        if (reportsID == null) {
+            reportsID = new ArrayList<>();
+        }
     }
 
     private void hideUp() {
