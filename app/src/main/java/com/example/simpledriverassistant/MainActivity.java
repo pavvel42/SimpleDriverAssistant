@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -65,6 +66,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (this.getIntent().getExtras() != null) {
+            if (this.getIntent().getExtras().getInt("kill") == 1) {
+                finishAffinity();
+                System.exit(0);
+            }
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         buildLayout(savedInstanceState);
