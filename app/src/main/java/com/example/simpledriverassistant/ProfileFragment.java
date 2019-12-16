@@ -41,7 +41,7 @@ public class ProfileFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         initVariables(mainView);
-        actionSetOnClickListener();
+        //actionSetOnClickListener();
         setValueInCardview();
 
         return mainView;

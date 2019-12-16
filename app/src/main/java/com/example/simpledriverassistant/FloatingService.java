@@ -467,7 +467,6 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         speakToUser(report4User.getAction(), report4User.getDistance());
         hideUp();
         setState(true);
-        //Toast.makeText(getApplicationContext(), "nowe zgłoszenie", Toast.LENGTH_LONG).show();
     }
 
     private void uploadRateUser(int state) {
