@@ -54,6 +54,8 @@ import com.google.gson.Gson;
 
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -437,7 +439,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     private void createReport4User(DocumentSnapshot documentSnapshot) {
         report4User = documentSnapshot.toObject(Report4User.class);
 //        radius.setText(Math.round(report4User.getDistance()) + "m");
-        radius.setText(tooLong(report4User.getDistance()) + "m");
+        radius.setText(round(report4User.getDistance(),1)+"m");
+        //radius.setText(tooLong(report4User.getDistance()) + "m");
         user_raiting.setText(String.format("%.2g%n", report4User.getRaiting()));
         email.setText(report4User.getBroadcaster());
         switch (report4User.getAction()) {
@@ -577,5 +580,13 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         like.setVisibility(View.GONE);
         dislike.setVisibility(View.GONE);
         skip.setVisibility(View.GONE);
+    }
+
+    public double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
