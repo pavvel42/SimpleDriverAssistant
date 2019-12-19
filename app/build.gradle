@@ -36,14 +36,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-basement:17.1.1'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'com.google.firebase:firebase-firestore:21.3.0'
+    implementation 'com.google.firebase:firebase-firestore:21.3.1'
     implementation 'com.google.firebase:firebase-functions:19.0.1'
 
     //Easy Permissions
     implementation 'pub.devrel:easypermissions:2.0.1'
 
     //Bubble
-    implementation 'com.github.bijoysingh:floating-bubble:3.0.0'
+    //implementation 'com.github.bijoysingh:floating-bubble:3.0.0'
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'

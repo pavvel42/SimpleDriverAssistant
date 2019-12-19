@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -25,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bsk.floatingbubblelib.FloatingBubblePermissions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -41,6 +39,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import floatingbubblelib.FloatingBubblePermissions;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;

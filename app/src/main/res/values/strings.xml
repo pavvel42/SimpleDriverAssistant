@@ -1,4 +1,8 @@
 <resources>
+    <string name="remove_bubble_description">Remove Floating Bubble</string>
+    <string name="floating_bubble_description">Floating Bubble</string>
+
+
     <string name="app_name">Simple Driver Assistant</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
