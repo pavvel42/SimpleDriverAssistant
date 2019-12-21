@@ -2,10 +2,7 @@ package com.example.simpledriverassistant;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +11,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,12 +22,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
+import com.example.simpledriverassistant.Beans.Actions;
+import com.example.simpledriverassistant.Beans.Report;
+import com.example.simpledriverassistant.Beans.Report4User;
+import com.example.simpledriverassistant.Beans.User;
+import com.example.simpledriverassistant.Support.CurrentTime;
+import com.example.simpledriverassistant.Support.NetworkStateReceiver;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.reflect.TypeToken;
@@ -62,12 +58,12 @@ import java.util.Locale;
 import static com.example.simpledriverassistant.MainActivity.floatingActionButton;
 import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
-import static com.example.simpledriverassistant.NotificationService.CHANNEL_ID;
+import static com.example.simpledriverassistant.Support.NotificationService.CHANNEL_ID;
 import static com.example.simpledriverassistant.R.layout.notification_view;
 
 public class FloatingService extends FloatingBubbleService implements LocationListener {
 
-    private static final String TAG = FloatingService.class.getSimpleName();
+    private final String TAG = FloatingService.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("users");
@@ -469,7 +465,11 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         userBroadcaster.userDownloadOnes();
         speakToUser(report4User.getAction(), report4User.getDistance());
         hideUp();
-        setState(true);
+        try {
+            setState(true);
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     private void uploadRateUser(int state) {

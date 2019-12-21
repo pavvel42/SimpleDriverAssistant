@@ -1,10 +1,10 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 import android.util.Log;
 
 public class Report4User {
 
-    private static final String TAG = Report4User.class.getSimpleName();
+    private final String TAG = Report4User.class.getSimpleName();
     private String broadcaster;
     private String reportid;
     private Double latitudeReport;
@@ -72,7 +72,7 @@ public class Report4User {
         this.raiting = raiting;
     }
 
-    protected void report4UserToString() {
+    public void report4UserToString() {
         Log.d(TAG, "getBroadcaster " + getBroadcaster() + " getReportid " + getReportid() + " getAction " + getAction() + " getRaiting " + getRaiting() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
     }
 }

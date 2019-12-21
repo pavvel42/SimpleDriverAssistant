@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.simpledriverassistant.Beans.User;
+import com.example.simpledriverassistant.Support.CurrentTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,7 +28,7 @@ import static com.example.simpledriverassistant.MainActivity.user;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String TAG = ProfileFragment.class.getSimpleName();
+    private final String TAG = ProfileFragment.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("users");

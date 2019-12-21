@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.simpledriverassistant.Support.InfoDialog;
+import com.example.simpledriverassistant.Support.NetworkStateReceiver;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,9 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class SignIn extends AppCompatActivity { /*https://www.youtube.com/watch?v=FtIc5UYXeKk&list=PLAiAOgZEvYQom2V8TXalGLXYxjYu6R7AS&index=5&t=742s*/
+public class SignIn extends AppCompatActivity {
 
-    private static final String TAG = SignIn.class.getSimpleName();
+    private final String TAG = SignIn.class.getSimpleName();
     private static final int GOOGLE_SIGN_IN = 123;
     private FirebaseAuth mAuth;
     private Button login;

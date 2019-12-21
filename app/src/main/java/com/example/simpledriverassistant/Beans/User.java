@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 import android.util.Log;
 
@@ -8,7 +8,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,10 +25,9 @@ public class User {
     private int like;
     private int dislike;
     private Double raiting;
-    private static final String TAG = User.class.getSimpleName();
+    private final String TAG = User.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference;
 
     public User() {
@@ -71,22 +69,6 @@ public class User {
         this.locationUser = locationUser;
     }
 
-    //    public Double getLatitude() {
-//        return latitude;
-//    }
-//
-//    public void setLatitude(Double latitude) {
-//        this.latitude = latitude;
-//    }
-//
-//    public Double getLongitude() {
-//        return longitude;
-//    }
-//
-//    public void setLongitude(Double longitude) {
-//        this.longitude = longitude;
-//    }
-//
     public Boolean getOnline() {
         return online;
     }
@@ -119,11 +101,11 @@ public class User {
         this.raiting = raiting;
     }
 
-    protected void userToString() {
+    public void userToString() {
         Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting() + " getOnline " + getOnline() + getLocationUser());
     }
 
-    protected void userUpdate() {
+    public void userUpdate() {
         db.collection("users").document(getEmail()).set(this, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -140,7 +122,7 @@ public class User {
         userToString();
     }
 
-    protected void userDownloadOnes() {
+    public void userDownloadOnes() {
         documentReference = db.collection("users").document(getEmail());
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

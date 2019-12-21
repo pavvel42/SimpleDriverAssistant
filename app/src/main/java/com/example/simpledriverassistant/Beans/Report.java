@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 import android.util.Log;
 
@@ -12,12 +12,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 
 public class Report {
 
+    private final String TAG = Report.class.getSimpleName();
     private String email = user.getEmail();
     private Long time;
     private Double latitude;
@@ -96,7 +95,7 @@ public class Report {
         this.raiting = raiting;
     }
 
-    protected boolean coordinatesNotNull() {
+    public boolean coordinatesNotNull() {
         if (getLatitude() != null && getLongitude() != null) {
             return true;
         } else {
@@ -104,7 +103,7 @@ public class Report {
         }
     }
 
-    protected void reportUpdate() {
+    public void reportUpdate() {
         collectionReference.add(this).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

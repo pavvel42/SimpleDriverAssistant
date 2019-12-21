@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 import android.util.Log;
 
@@ -15,7 +15,7 @@ import com.google.firebase.firestore.SetOptions;
 
 public class LocationUser {
 
-    private static final String TAG = LocationUser.class.getSimpleName();
+    private final String TAG = LocationUser.class.getSimpleName();
     private Double latitude;
     private Double longitude;
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
@@ -56,7 +56,7 @@ public class LocationUser {
         return string;
     }
 
-    protected void userUpdate() {
+    public void userUpdate() {
         db.collection("users").document(user_google_information.getEmail()).collection("locationUser").document(user_google_information.getEmail()).set(this, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

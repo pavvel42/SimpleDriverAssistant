@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Support;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,12 +7,12 @@ import android.util.Log;
 
 public class NetworkStateReceiver {
 
+    private final String TAG = NetworkStateReceiver.class.getSimpleName();
+
     public NetworkStateReceiver() {
     }
 
-    private static final String TAG = NetworkStateReceiver.class.getSimpleName();
-
-    protected boolean haveNetworkConnection(Context context) {
+    public boolean haveNetworkConnection(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {

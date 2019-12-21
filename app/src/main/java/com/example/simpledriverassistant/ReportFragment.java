@@ -1,19 +1,22 @@
 package com.example.simpledriverassistant;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.simpledriverassistant.Adapters.Adapter;
+import com.example.simpledriverassistant.Beans.Report;
+import com.example.simpledriverassistant.Support.CurrentTime;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,8 +30,8 @@ import java.util.ArrayList;
 
 public class ReportFragment extends Fragment {
 
-    private static final String TAG = ReportFragment.class.getSimpleName();
-    private ArrayList<Report> exampleList;
+    private final String TAG = ReportFragment.class.getSimpleName();
+    private ArrayList<Report> mList;
     private RecyclerView mRecyclerView;
     private Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -41,9 +44,10 @@ public class ReportFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.fragment_report, container, false);
-        exampleList = new ArrayList<>();
+        mList = new ArrayList<>();
         loadReports();
         bulidRecycleView(mainView);
+        swipeFragmentBills(mainView);
         return mainView;
     }
 
@@ -51,14 +55,14 @@ public class ReportFragment extends Fragment {
         mRecyclerView = mainView.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new Adapter(exampleList);
+        mAdapter = new Adapter(mList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                //Toast.makeText(getContext(), "Position: " + exampleList.get(position).getAction(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Position: " + mList.get(position).getAction(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -68,12 +72,26 @@ public class ReportFragment extends Fragment {
         });
     }
 
+    private void swipeFragmentBills(View mainView) {
+        final SwipeRefreshLayout swipeRefreshLayout = mainView.findViewById(R.id.swipeRefreshLayoutReport);
+        swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.YELLOW, Color.BLUE);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                loadReports();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     public void removeItem(int position) {
-        exampleList.remove(position);
+        mList.remove(position);
         mAdapter.notifyItemRemoved(position);
     }
 
     private void loadReports() {
+        mList.clear();
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -84,7 +102,7 @@ public class ReportFragment extends Fragment {
                         if (report.getEmail().equals(user_google_information.getEmail())) {
                             Long diff = currentTime.milliseconds() - report.getTime();
                             Long minutes = currentTime.convertMillisecondsToMinutes(diff);
-                            exampleList.add(new Report(setImageInReportFragment(report.getAction()), minutes, report.getLatitude(), report.getLongitude()));
+                            mList.add(new Report(setImageInReportFragment(report.getAction()), minutes, report.getLatitude(), report.getLongitude()));
                             mAdapter.notifyDataSetChanged();
                         }
                     }

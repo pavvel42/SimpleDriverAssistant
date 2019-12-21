@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -26,6 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bsk.floatingbubblelib.FloatingBubblePermissions;
+import com.example.simpledriverassistant.Beans.LocationUser;
+import com.example.simpledriverassistant.Beans.User;
+import com.example.simpledriverassistant.Support.InfoDialog;
+import com.example.simpledriverassistant.Support.NetworkStateReceiver;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -47,11 +50,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = MainActivity.class.getSimpleName();
     private final String SERVICE_NAME = "com.example.simpledriverassistant.FloatingService";
     private GoogleSignInClient mGoogleSignInClient;
     protected static LocationUser locationUser = new LocationUser();
-    protected static User user = new User();
+    public static User user = new User();
     private DrawerLayout drawer;
     private View headerView;
     protected static View floatingActionButton; //FloatingActionButton
