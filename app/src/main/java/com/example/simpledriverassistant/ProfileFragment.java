@@ -23,6 +23,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 
@@ -128,9 +131,15 @@ public class ProfileFragment extends Fragment {
     private void raiting4user(User userDocument) {
         user.setLike(userDocument.getLike());
         user.setDislike(userDocument.getDislike());
-        if (userDocument.getLike() == 0 || userDocument.getDislike() == 0) {
+        if (userDocument.getLike() == 0 && userDocument.getDislike() == 0) {
             user.setRaiting(0.0);
-        } else {
+        } else if (userDocument.getLike() >= 1 && userDocument.getDislike() == 0) {
+            user.setRaiting(1.0);
+        } else if (userDocument.getLike() == 0 && userDocument.getDislike() >= 1) {
+            user.setRaiting(0.0);
+        } else if (userDocument.getLike() >= 1 && userDocument.getDislike() == 1) {
+            user.setRaiting(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
+        } else if (userDocument.getLike() >= 1 && userDocument.getDislike() >= 1) {
             user.setRaiting(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
         }
     }

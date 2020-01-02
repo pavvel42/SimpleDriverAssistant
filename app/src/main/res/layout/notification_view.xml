@@ -302,7 +302,7 @@
                         android:text="@string/distance"
                         android:textAlignment="center"
                         android:textColor="@color/primary_text"
-                        android:textSize="8sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -367,7 +367,7 @@
                         android:text="@string/positive_button"
                         android:textAlignment="center"
                         android:textColor="@color/primary_text"
-                        android:textSize="8sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -401,7 +401,7 @@
                         android:text="@string/app_name"
                         android:textAlignment="center"
                         android:textColor="@color/primary_text"
-                        android:textSize="5sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
