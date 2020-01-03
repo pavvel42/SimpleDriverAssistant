@@ -91,7 +91,6 @@ public class SignIn extends AppCompatActivity {
                             SignIn.this.updateUI(user);
                         } else {
                             progressBar.setVisibility(View.INVISIBLE);
-
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignIn.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                             SignIn.this.updateUI(null);
@@ -109,6 +108,7 @@ public class SignIn extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
@@ -119,6 +119,7 @@ public class SignIn extends AppCompatActivity {
             finish();
             startActivity(new Intent(SignIn.this, MainActivity.class));
         } else {
+            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(SignIn.this, "Authentication failed", Toast.LENGTH_SHORT).show();
         }
     }
