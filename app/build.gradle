@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:19.0.1'
 
     //Easy Permissions
-    implementation 'pub.devrel:easypermissions:2.0.1'
+    implementation 'pub.devrel:easypermissions:3.0.0'
 
     //Bubble
     implementation 'com.github.bijoysingh:floating-bubble:3.0.0'

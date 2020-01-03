@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             InfoDialog dialog = new InfoDialog(getString(R.string.pls_turn_on_gps), intent_action_location_source_settings);
                             dialog.show(getSupportFragmentManager(), "intent_action_location_source_settings dialog");
                         } else if (networkStateReceiver.haveNetworkConnection(MainActivity.this) == false) {
-                            Intent intent_action_network_operator_settings = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+                            Intent intent_action_network_operator_settings = new Intent(Settings.ACTION_SETTINGS);
                             InfoDialog dialog = new InfoDialog(getString(R.string.pls_turn_on_network_connection), intent_action_network_operator_settings);
                             dialog.show(getSupportFragmentManager(), "intent_action_network_operator_settings dialog");
                         } else {
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @AfterPermissionGranted(123)
     private boolean checkPerm() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET};
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (EasyPermissions.hasPermissions(this, perms)) {
             return true;
         } else {
@@ -315,8 +315,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        InfoDialog exampleDialog = new InfoDialog(getString(R.string.thx_for_persmission));
-        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+//        InfoDialog exampleDialog = new InfoDialog(getString(R.string.thx_for_persmission));
+//        exampleDialog.show(getSupportFragmentManager(), "example dialog");
+        Toast.makeText(this, getString(R.string.thx_for_persmission), Toast.LENGTH_SHORT).show();
     }
 
     @Override
