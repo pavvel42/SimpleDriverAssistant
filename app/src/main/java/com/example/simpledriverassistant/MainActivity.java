@@ -20,6 +20,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         buildLayout(savedInstanceState);
         initVariables();
         actionSetOnClickListener();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     /*Inicjowanie zmiennych*/
@@ -325,5 +327,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this).build().show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        super.onDestroy();
     }
 }
