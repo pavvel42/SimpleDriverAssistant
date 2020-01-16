@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:theme="@style/AppTheme">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:orientation="vertical"
         android:weightSum="10">
 
@@ -22,9 +23,8 @@
             android:rowCount="5">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/btn_profile"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
+                android:layout_height="150dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
                 android:layout_margin="10dp"
@@ -40,10 +40,11 @@
                     android:padding="2dp">
 
                     <ImageView
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
+                        android:id="@+id/report_action"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:src="@drawable/ic_cup" />
+                        android:src="@drawable/ic_speed_camera" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -51,74 +52,92 @@
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:orientation="vertical"
-                        android:padding="3dp">
+                        android:padding="1dp">
 
                         <TextView
+                            android:id="@+id/report_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_row="0"
+                            android:layout_column="2"
                             android:layout_margin="5dp"
-                            android:text="@string/your_profile"
+                            android:text="@string/time_report"
+                            android:textAlignment="center"
                             android:textColor="@color/primary_text"
-                            android:textSize="22sp"
+                            android:textSize="13sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/user_like"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="@string/like"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/user_unlike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="@string/dislike"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/user_rating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="@string/rating"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/user_longitude"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="@string/longitude"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:visibility="invisible" />
-
-                        <TextView
-                            android:id="@+id/user_latitude"
+                            android:id="@+id/report_latitude"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="@string/latitude"
                             android:textAlignment="center"
                             android:textColor="@color/primary_text"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/report_longitude"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="@string/longitude"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/report_delete"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_margin="0dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delete_report"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text"
                             android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:visibility="invisible" />
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_marginLeft="6dp"
+                            android:src="@drawable/ic_remove" />
 
                     </LinearLayout>
 
@@ -130,4 +149,8 @@
 
     </LinearLayout>
 
-</ScrollView>
+
+</androidx.cardview.widget.CardView>
+
+
+

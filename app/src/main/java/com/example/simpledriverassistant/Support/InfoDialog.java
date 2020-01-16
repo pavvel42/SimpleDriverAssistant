@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Support;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import com.example.simpledriverassistant.R;
 
 public class InfoDialog extends AppCompatDialogFragment {
 
@@ -32,7 +34,7 @@ public class InfoDialog extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.information))
                 .setMessage(getInfo())
                 .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {

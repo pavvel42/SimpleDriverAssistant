@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.simpledriverassistant.Beans.User;
+import com.example.simpledriverassistant.Support.CurrentTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,17 +23,18 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String TAG = ProfileFragment.class.getSimpleName();
+    private final String TAG = ProfileFragment.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference = db.document("users/" + user_google_information.getEmail());
     protected View card_view_profile;
-    private TextView user_raiting, user_like, user_dislike, user_longitude, user_latitude;
+    private TextView user_rating, user_like, user_dislike, user_longitude, user_latitude;
     private CurrentTime currentTime = new CurrentTime();
 
     @Nullable
@@ -40,7 +43,7 @@ public class ProfileFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         initVariables(mainView);
-        actionSetOnClickListener();
+        //actionSetOnClickListener();
         setValueInCardview();
 
         return mainView;
@@ -49,7 +52,7 @@ public class ProfileFragment extends Fragment {
     /*Inicjowanie zmiennych*/
     private void initVariables(View mainView) {
         card_view_profile = mainView.findViewById(R.id.btn_profile);
-        user_raiting = mainView.findViewById(R.id.user_raiting);
+        user_rating = mainView.findViewById(R.id.user_rating);
         user_like = mainView.findViewById(R.id.user_like);
         user_dislike = mainView.findViewById(R.id.user_unlike);
         user_longitude = mainView.findViewById(R.id.user_longitude);
@@ -57,17 +60,17 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setValueInCardview() {
-//        user_raiting.setText(getResources().getString(R.string.raiting) + user.getRaiting()); /*getString crash app https://stackoverflow.com/questions/18956766/android-application-crashes-at-the-getstring-line#comment27996309_18956819*/
+//        user_rating.setText(getResources().getString(R.string.rating) + user.getRating()); /*getString crash app https://stackoverflow.com/questions/18956766/android-application-crashes-at-the-getstring-line#comment27996309_18956819*/
 //        user_like.setText(getString(R.string.like) + user.getLike());
 //        user_dislike.setText(getString(R.string.dislike) + user.getDislike());
 //        user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
 //        user_latitude.setText(getString(R.string.latitude) + user.getLatitude());
 
-        user_raiting.setText("Raiting: " + user.getRaiting());
+        user_rating.setText("Rating: " + String.format("%.2g%n", user.getRating()));
         user_like.setText("Likes: " + user.getLike());
         user_dislike.setText("Dislikes: " + user.getDislike());
-        user_longitude.setText("Longitude: " + user.getLongitude());
-        user_latitude.setText("Lalitude: " + user.getLatitude());
+        user_longitude.setText("Longitude: " + locationUser.getLongitude());
+        user_latitude.setText("Lalitude: " + locationUser.getLatitude());
     }
 
     private void actionSetOnClickListener() {
@@ -80,7 +83,8 @@ public class ProfileFragment extends Fragment {
                 } else {
                     user_longitude.setVisibility(View.VISIBLE);
                     user_latitude.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(), "Tryb Developera ;)", Toast.LENGTH_SHORT).show();
+                    setValueInCardview();
+                    Toast.makeText(getContext(), "Dev Mode", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -102,9 +106,7 @@ public class ProfileFragment extends Fragment {
                 }
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
-                    user.setRaiting(userDocument.getRaiting());
-                    user.setLike(userDocument.getLike());
-                    user.setDislike(userDocument.getDislike());
+                    rating4user(userDocument);
 //                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
 //                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
                     user.userToString();
@@ -116,9 +118,26 @@ public class ProfileFragment extends Fragment {
                     user.setUid(user_google_information.getUid());
                     user.setOnline(false);
                     user.userUpdate();
+                    locationUser.userUpdate();
                     Log.d(TAG, getString(R.string.firebase_upload));
                 }
             }
         });
+    }
+
+    private void rating4user(User userDocument) {
+        user.setLike(userDocument.getLike());
+        user.setDislike(userDocument.getDislike());
+        if (userDocument.getLike() == 0 && userDocument.getDislike() == 0) {
+            user.setRating(0.0);
+        } else if (userDocument.getLike() >= 1 && userDocument.getDislike() == 0) {
+            user.setRating(1.0);
+        } else if (userDocument.getLike() == 0 && userDocument.getDislike() >= 1) {
+            user.setRating(0.0);
+        } else if (userDocument.getLike() >= 1 && userDocument.getDislike() == 1) {
+            user.setRating(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
+        } else if (userDocument.getLike() >= 1 && userDocument.getDislike() >= 1) {
+            user.setRating(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
+        }
     }
 }

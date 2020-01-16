@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 public class Actions {
 

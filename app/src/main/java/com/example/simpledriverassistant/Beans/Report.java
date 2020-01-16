@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 import android.util.Log;
 
@@ -12,23 +12,31 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.example.simpledriverassistant.MainActivity.user;
 
 public class Report {
 
+    private final String TAG = Report.class.getSimpleName();
     private String email = user.getEmail();
     private Long time;
     private Double latitude;
     private Double longitude;
     private String action;
-    private Double raiting = user.getRaiting();
+    private int mImageResource;
+    private Double rating = user.getRating();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("report");
     private DocumentReference documentReference;
 
     public Report() {
+    }
+
+    public Report(int mImageResource, Long time, Double latitude, Double longitude) {
+        this.mImageResource = mImageResource;
+        this.time = time;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getEmail() {
@@ -63,6 +71,14 @@ public class Report {
         this.longitude = longitude;
     }
 
+    public int getmImageResource() {
+        return mImageResource;
+    }
+
+    public void setmImageResource(int mImageResource) {
+        this.mImageResource = mImageResource;
+    }
+
     public String getAction() {
         return action;
     }
@@ -71,25 +87,23 @@ public class Report {
         this.action = action;
     }
 
-    public Double getRaiting() {
-        return raiting;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setRaiting(Double raiting) {
-        this.raiting = raiting;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
-    protected boolean coordinatesNotNull() {
-        setLatitude(user.getLatitude());
-        setLongitude(user.getLongitude());
-        if (latitude != null && longitude != null) {
+    public boolean coordinatesNotNull() {
+        if (getLatitude() != null && getLongitude() != null) {
             return true;
         } else {
             return false;
         }
     }
 
-    protected void reportUpdate() {
+    public void reportUpdate() {
         collectionReference.add(this).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

@@ -1,4 +1,4 @@
-package com.example.simpledriverassistant;
+package com.example.simpledriverassistant.Beans;
 
 import android.util.Log;
 
@@ -8,32 +8,33 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-
-import static com.example.simpledriverassistant.MainActivity.user;
 
 public class User {
 
     private String email;
     private String uid;
     private String name;
-    private Double latitude;
-    private Double longitude;
+    //    private Double latitude;
+    //    private Double longitude;
     private Boolean online;
+    private LocationUser locationUser;
     private int like;
     private int dislike;
-    private Double raiting;
-    private static final String TAG = User.class.getSimpleName();
+    private Double rating;
+    private final String TAG = User.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference;
 
     public User() {
+    }
+
+    public User(String email) {
+        this.email = email;
     }
 
     public String getEmail() {
@@ -60,20 +61,12 @@ public class User {
         this.name = name;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public LocationUser getLocationUser() {
+        return locationUser;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setLocationUser(LocationUser locationUser) {
+        this.locationUser = locationUser;
     }
 
     public Boolean getOnline() {
@@ -100,19 +93,19 @@ public class User {
         this.dislike = unlike;
     }
 
-    public Double getRaiting() {
-        return raiting;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setRaiting(Double raiting) {
-        this.raiting = raiting;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
-    protected void userToString() {
-        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLatitude " + getLatitude() + " getLongitude " + getLongitude() + " getOnline " + getOnline() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting());
+    public void userToString() {
+        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRating " + getRating() + " getOnline " + getOnline() + getLocationUser());
     }
 
-    protected void userUpdate() {
+    public void userUpdate() {
         db.collection("users").document(getEmail()).set(this, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -129,27 +122,16 @@ public class User {
         userToString();
     }
 
-    private void userDownloadOnes() {
+    public void userDownloadOnes() {
+        documentReference = db.collection("users").document(getEmail());
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
-                    user.setRaiting(userDocument.getRaiting());
-                    user.setLike(userDocument.getLike());
-                    user.setDislike(userDocument.getDislike());
-                    user.setLongitude(userDocument.getLongitude());
-                    user.setLatitude(userDocument.getLatitude());
-                    user.userToString();
-                    user.toString();
+                    setLike(userDocument.getLike());
+                    setDislike(userDocument.getDislike());
                     //refreshFragment();
-                } else {
-                    user.setEmail(user_google_information.getEmail());
-                    user.setName(user_google_information.getDisplayName());
-                    user.setUid(user_google_information.getUid());
-                    user.setOnline(false);
-                    user.userUpdate();
-                    //Log.d(TAG, getString(R.string.firebase_upload));
                 }
                 Log.d(TAG, "Dane zostały zapisane");
             }
