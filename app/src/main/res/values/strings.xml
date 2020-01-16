@@ -1,7 +1,44 @@
 <resources>
-    <string name="app_name">SimpleDriverAssistant</string>
+    <string name="app_name">Simple Driver Assistant</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="firebase_login">Firebase Login</string>
     <string name="login_with_google">Login with Google</string>
+    <string name="pls_turn_on_gps">Please turn on GPS</string>
+    <string name="lost_gps">No GPS connection</string>
+    <string name="pls_turn_on_network_connection">No network connection</string>
+    <string name="click_to_return">Click to return</string>
+    <string name="app_need_permission">App need permission</string>
+    <string name="thx_for_persmission">Thanks for permission</string>
+    <string name="service_channel">Service Channel</string>
+    <string name="information">Simple Driver Assistant - author Paweł Durda</string>
+    <string name="positive_button" translatable="false">OK</string>
+    <string name="close">Close</string>
+    <string name="choose_action">Choose Action</string>
+    <string name="hide">Hide View</string>
+    <string name="skip">Skip Report</string>
+    <string name="delete_report">Delete</string>
+    <string name="distance">500m</string>
+    <string name="your_profile">Your profile</string>
+    <string name="rating">Rating: </string>
+    <string name="like">Likes: </string>
+    <string name="dislike">Dislikes: </string>
+    <string name="latitude">Latitude: </string>
+    <string name="longitude">Longitude: </string>
+    <string name="firebase_upload">Firebase User Object Upload Start</string>
+    <string name="firebase_download">Firebase User Object Download Start</string>
+    <string name="refresh_fragment">Refresh Fragment</string>
+    <string name="thx_for_review">Send Review</string>
+    <string name="time_report">Minutes Ago: </string>
+    <string name="send_report">Send Report </string>
+    <string name="tts_carAccident"> Car accident </string>
+    <string name="tts_roadsideInspection"> Roadside Inspection </string>
+    <string name="tts_speedCamera"> Speed Camera </string>
+    <string name="tts_roadworks"> Roadworks </string>
+    <string name="tts_meters"> meters</string>
+    <string name="thx_for_feedback">Thanks you for the feedback</string>
+
+    <!--    <string name=""> </string>-->
+
+    <!--    getString(R.string)-->
 </resources>

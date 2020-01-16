@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:keepScreenOn="true"
+    android:theme="@style/AppTheme"
     tools:context="com.example.simpledriverassistant.MainActivity"
     tools:openDrawer="start">
 
@@ -18,16 +20,16 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@color/primary"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/primary_light">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/floating_button"
@@ -35,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="20dp"
+                android:background="@color/accent"
                 app:srcCompat="@drawable/ic_add_black" />
         </FrameLayout>
     </LinearLayout>
