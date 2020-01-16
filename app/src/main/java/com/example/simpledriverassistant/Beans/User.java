@@ -24,7 +24,7 @@ public class User {
     private LocationUser locationUser;
     private int like;
     private int dislike;
-    private Double raiting;
+    private Double rating;
     private final String TAG = User.class.getSimpleName();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -93,16 +93,16 @@ public class User {
         this.dislike = unlike;
     }
 
-    public Double getRaiting() {
-        return raiting;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setRaiting(Double raiting) {
-        this.raiting = raiting;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     public void userToString() {
-        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRaiting " + getRaiting() + " getOnline " + getOnline() + getLocationUser());
+        Log.d(TAG, "getEmail " + getEmail() + " getName " + getName() + " getUid " + getUid() + " getLike " + getLike() + " getDislike " + getDislike() + " getRating " + getRating() + " getOnline " + getOnline() + getLocationUser());
     }
 
     public void userUpdate() {

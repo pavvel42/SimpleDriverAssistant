@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Gravity;
@@ -82,8 +81,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     private ArrayList<String> reportsID = new ArrayList<String>();
     private TextToSpeech mTTS;
     View buttonTrafficCone, buttonCarCrash, buttonInspection, buttonSpeedCamera, like, dislike, hide,
-            radiusCV, iconCV, user_raitingCV, emailCV, skip;
-    TextView radius, user_raiting, email;
+            radiusCV, iconCV, user_ratingCV, emailCV, skip;
+    TextView radius, user_rating, email;
     ImageView iconAction4Report;
 
 
@@ -125,7 +124,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
     @SuppressLint("MissingPermission")
     private void tracking() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, this /*locationListener*/);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, this);
     }
 
     @Override
@@ -228,15 +227,15 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         radiusCV.setVisibility(View.GONE);
         iconCV = expandableView.findViewById(R.id.iconCV);
         iconCV.setVisibility(View.GONE);
-        user_raitingCV = expandableView.findViewById(R.id.user_raitingCV);
-        user_raitingCV.setVisibility(View.GONE);
+        user_ratingCV = expandableView.findViewById(R.id.user_ratingCV);
+        user_ratingCV.setVisibility(View.GONE);
         emailCV = expandableView.findViewById(R.id.emailCV);
         emailCV.setVisibility(View.GONE);
         skip = expandableView.findViewById(R.id.skip);
         skip.setVisibility(View.GONE);
         hide = expandableView.findViewById(R.id.hide);
         radius = expandableView.findViewById(R.id.radius);
-        user_raiting = expandableView.findViewById(R.id.user_raiting);
+        user_rating = expandableView.findViewById(R.id.user_rating);
         email = expandableView.findViewById(R.id.email);
         iconAction4Report = expandableView.findViewById(R.id.iconAction4Report);
         iconAction4Report.setImageResource(R.drawable.ic_like);
@@ -438,8 +437,8 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
 //        radius.setText(Math.round(report4User.getDistance()) + "m");
         radius.setText(round(report4User.getDistance(), 1) + "m");
         //radius.setText(tooLong(report4User.getDistance()) + "m");
-        user_raiting.setText(round(report4User.getRaiting(), 1) + "");
-//        user_raiting.setText(String.format("%.2g%n", report4User.getRaiting()));
+        user_rating.setText(round(report4User.getRating(), 1) + "");
+//        user_rating.setText(String.format("%.2g%n", report4User.getRating()));
         email.setText(report4User.getBroadcaster());
         switch (report4User.getAction()) {
             case "carAccident": {
@@ -563,7 +562,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         buttonSpeedCamera.setVisibility(View.GONE);
         radiusCV.setVisibility(View.VISIBLE);
         iconCV.setVisibility(View.VISIBLE);
-        user_raitingCV.setVisibility(View.VISIBLE);
+        user_ratingCV.setVisibility(View.VISIBLE);
         emailCV.setVisibility(View.VISIBLE);
         like.setVisibility(View.VISIBLE);
         dislike.setVisibility(View.VISIBLE);
@@ -577,7 +576,7 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         buttonSpeedCamera.setVisibility(View.VISIBLE);
         radiusCV.setVisibility(View.GONE);
         iconCV.setVisibility(View.GONE);
-        user_raitingCV.setVisibility(View.GONE);
+        user_ratingCV.setVisibility(View.GONE);
         emailCV.setVisibility(View.GONE);
         like.setVisibility(View.GONE);
         dislike.setVisibility(View.GONE);

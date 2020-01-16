@@ -23,9 +23,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import static com.example.simpledriverassistant.MainActivity.locationUser;
 import static com.example.simpledriverassistant.MainActivity.user;
 
@@ -37,7 +34,7 @@ public class ProfileFragment extends Fragment {
     private CollectionReference collectionReference = db.collection("users");
     private DocumentReference documentReference = db.document("users/" + user_google_information.getEmail());
     protected View card_view_profile;
-    private TextView user_raiting, user_like, user_dislike, user_longitude, user_latitude;
+    private TextView user_rating, user_like, user_dislike, user_longitude, user_latitude;
     private CurrentTime currentTime = new CurrentTime();
 
     @Nullable
@@ -55,7 +52,7 @@ public class ProfileFragment extends Fragment {
     /*Inicjowanie zmiennych*/
     private void initVariables(View mainView) {
         card_view_profile = mainView.findViewById(R.id.btn_profile);
-        user_raiting = mainView.findViewById(R.id.user_raiting);
+        user_rating = mainView.findViewById(R.id.user_rating);
         user_like = mainView.findViewById(R.id.user_like);
         user_dislike = mainView.findViewById(R.id.user_unlike);
         user_longitude = mainView.findViewById(R.id.user_longitude);
@@ -63,13 +60,13 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setValueInCardview() {
-//        user_raiting.setText(getResources().getString(R.string.raiting) + user.getRaiting()); /*getString crash app https://stackoverflow.com/questions/18956766/android-application-crashes-at-the-getstring-line#comment27996309_18956819*/
+//        user_rating.setText(getResources().getString(R.string.rating) + user.getRating()); /*getString crash app https://stackoverflow.com/questions/18956766/android-application-crashes-at-the-getstring-line#comment27996309_18956819*/
 //        user_like.setText(getString(R.string.like) + user.getLike());
 //        user_dislike.setText(getString(R.string.dislike) + user.getDislike());
 //        user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
 //        user_latitude.setText(getString(R.string.latitude) + user.getLatitude());
 
-        user_raiting.setText("Raiting: " + String.format("%.2g%n", user.getRaiting()));
+        user_rating.setText("Rating: " + String.format("%.2g%n", user.getRating()));
         user_like.setText("Likes: " + user.getLike());
         user_dislike.setText("Dislikes: " + user.getDislike());
         user_longitude.setText("Longitude: " + locationUser.getLongitude());
@@ -109,7 +106,7 @@ public class ProfileFragment extends Fragment {
                 }
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
-                    raiting4user(userDocument);
+                    rating4user(userDocument);
 //                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
 //                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
                     user.userToString();
@@ -128,19 +125,19 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void raiting4user(User userDocument) {
+    private void rating4user(User userDocument) {
         user.setLike(userDocument.getLike());
         user.setDislike(userDocument.getDislike());
         if (userDocument.getLike() == 0 && userDocument.getDislike() == 0) {
-            user.setRaiting(0.0);
+            user.setRating(0.0);
         } else if (userDocument.getLike() >= 1 && userDocument.getDislike() == 0) {
-            user.setRaiting(1.0);
+            user.setRating(1.0);
         } else if (userDocument.getLike() == 0 && userDocument.getDislike() >= 1) {
-            user.setRaiting(0.0);
+            user.setRating(0.0);
         } else if (userDocument.getLike() >= 1 && userDocument.getDislike() == 1) {
-            user.setRaiting(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
+            user.setRating(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
         } else if (userDocument.getLike() >= 1 && userDocument.getDislike() >= 1) {
-            user.setRaiting(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
+            user.setRating(Double.valueOf(userDocument.getLike()) / Double.valueOf(userDocument.getDislike()));
         }
     }
 }

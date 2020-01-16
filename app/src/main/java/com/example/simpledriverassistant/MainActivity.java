@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    return;
 //                }
 //                User userExample = documentSnapshot.toObject(User.class);
-//                Double raitingEx = userExample.getRaiting();
-//                Log.d(TAG,"Raiting: "+raitingEx);
+//                Double ratingEx = userExample.getRating();
+//                Log.d(TAG,"Rating: "+ratingEx);
 //            }
 //        });
 
@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    User userExample = documentSnapshot.toObject(User.class);
 //                    //userExample.setDocumentId(documentSnapshot.getId());
 //
-//                    Double raitingEx = userExample.getRaiting();
-//                    Log.d(TAG,"Raiting: "+raitingEx);
+//                    Double ratingEx = userExample.getRating();
+//                    Log.d(TAG,"Rating: "+ratingEx);
 //                }
 //
 //                //textViewData.setText(data);
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new ProfileFragment()).commit();
                 break;
             case R.id.nav_info:
-                Toast.makeText(this, "Information", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.information), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:
                 logout();
@@ -273,10 +273,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /*Start usługi*/
+    //ContextCompat.startForegroundService(this, serviceIntent);
     public void startService() {
         Intent serviceIntent = new Intent(this, FloatingService.class);
         serviceIntent.putExtra("inputExtra", getString(R.string.click_to_return));
-        ContextCompat.startForegroundService(this, serviceIntent);
+        startService(serviceIntent);
         userOnline(true);
         floatingActionButton.setVisibility(View.INVISIBLE);
     }

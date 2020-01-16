@@ -23,7 +23,7 @@ public class Report {
     private Double longitude;
     private String action;
     private int mImageResource;
-    private Double raiting = user.getRaiting();
+    private Double rating = user.getRating();
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("report");
@@ -87,12 +87,12 @@ public class Report {
         this.action = action;
     }
 
-    public Double getRaiting() {
-        return raiting;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setRaiting(Double raiting) {
-        this.raiting = raiting;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     public boolean coordinatesNotNull() {

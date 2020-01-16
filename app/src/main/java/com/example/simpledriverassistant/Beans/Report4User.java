@@ -11,7 +11,7 @@ public class Report4User {
     private Double longitudeReport;
     private Double distance;
     private String action;
-    private Double raiting;
+    private Double rating;
 
     public Report4User() {
     }
@@ -64,15 +64,15 @@ public class Report4User {
         this.action = action;
     }
 
-    public Double getRaiting() {
-        return raiting;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setRaiting(Double raiting) {
-        this.raiting = raiting;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     public void report4UserToString() {
-        Log.d(TAG, "getBroadcaster " + getBroadcaster() + " getReportid " + getReportid() + " getAction " + getAction() + " getRaiting " + getRaiting() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
+        Log.d(TAG, "getBroadcaster " + getBroadcaster() + " getReportid " + getReportid() + " getAction " + getAction() + " getRating " + getRating() + " getDistance " + getDistance() + " getLatitudeReport " + getLatitudeReport() + " getLongitudeReport " + getLongitudeReport());
     }
 }
