@@ -60,12 +60,6 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setValueInCardview() {
-//        user_rating.setText(getResources().getString(R.string.rating) + user.getRating()); /*getString crash app https://stackoverflow.com/questions/18956766/android-application-crashes-at-the-getstring-line#comment27996309_18956819*/
-//        user_like.setText(getString(R.string.like) + user.getLike());
-//        user_dislike.setText(getString(R.string.dislike) + user.getDislike());
-//        user_longitude.setText(getString(R.string.longitude) + user.getLongitude());
-//        user_latitude.setText(getString(R.string.latitude) + user.getLatitude());
-
         user_rating.setText("Rating: " + String.format("%.2g%n", user.getRating()));
         user_like.setText("Likes: " + user.getLike());
         user_dislike.setText("Dislikes: " + user.getDislike());
@@ -107,11 +101,9 @@ public class ProfileFragment extends Fragment {
                 if (documentSnapshot.exists()) {
                     User userDocument = documentSnapshot.toObject(User.class);
                     rating4user(userDocument);
-//                    user.setLongitude(userDocument.getLongitude()); //później wyłączyć
-//                    user.setLatitude(userDocument.getLatitude()); //później wyłączyć
                     user.userToString();
                     user.toString();
-                    setValueInCardview();                     //refreshFragment();
+                    setValueInCardview();
                 } else {
                     user.setEmail(user_google_information.getEmail());
                     user.setName(user_google_information.getDisplayName());

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static User user = new User();
     private DrawerLayout drawer;
     private View headerView;
-    protected static View floatingActionButton; //FloatingActionButton
+    protected static View floatingActionButton;
     private ImageView avatar;
     private TextView name, email;
     private FirebaseUser user_google_information = FirebaseAuth.getInstance().getCurrentUser();
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    /*Ststus usera Online/Offline*/
+    /*Status usera*/
     protected void userOnline(Boolean state) {
         user.setEmail(user_google_information.getEmail());
         user.setName(user_google_information.getDisplayName());
@@ -178,46 +178,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user.setOnline(state);
         user.userUpdate();
         Log.d(TAG, getString(R.string.firebase_upload));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        /*potrzebuje executora!? do działania w klasie user*/
-//        documentReference = db.document("users/"+user_google_information.getEmail());
-//        documentReference.addSnapshotListener((Executor) User.this, new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    return;
-//                }
-//                User userExample = documentSnapshot.toObject(User.class);
-//                Double ratingEx = userExample.getRating();
-//                Log.d(TAG,"Rating: "+ratingEx);
-//            }
-//        });
-
-        /*Nasłuchiwanie kolekcji*/
-//        collectionReference.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    return;
-//                }
-//
-//                String data = "";
-//
-//                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-//                    User userExample = documentSnapshot.toObject(User.class);
-//                    //userExample.setDocumentId(documentSnapshot.getId());
-//
-//                    Double ratingEx = userExample.getRating();
-//                    Log.d(TAG,"Rating: "+ratingEx);
-//                }
-//
-//                //textViewData.setText(data);
-//            }
-//        });
     }
 
     /* Wylogowanie z Firebase*/
@@ -284,8 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /*Stop usługi*/
     public void stopService() {
-        //onDestroy(); //trzeba spawdzić czy usługa istnieje
-        Intent serviceIntent = new Intent(this, FloatingService.class); //główna usługa
+        Intent serviceIntent = new Intent(this, FloatingService.class);
         stopService(serviceIntent);
     }
 

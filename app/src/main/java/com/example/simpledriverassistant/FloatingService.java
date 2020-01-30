@@ -87,77 +87,6 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
 
 
     @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude());
-        report.setLatitude(location.getLatitude());
-        report.setLongitude(location.getLongitude());
-        //Toast.makeText(getApplicationContext(), "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-        if (locationUser != null) {
-            locationUser.setLatitude(location.getLatitude());
-            locationUser.setLongitude(location.getLongitude());
-            locationUser.userUpdate();
-        } else {
-            locationUserUpdate(location.getLatitude(), location.getLongitude());
-        }
-        if (report4User != null) {
-            currentDistance(location.getLatitude(), location.getLongitude(), report4User.getLatitudeReport(), report4User.getLongitudeReport());
-        }
-        Log.d(TAG, getString(R.string.firebase_upload));
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Intent serviceIntent = new Intent(this, FloatingService.class);
-        stopService(serviceIntent);
-    }
-
-    @SuppressLint("MissingPermission")
-    private void tracking() {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, this);
-    }
-
-    @Override
-    protected void setTouchListener() {
-        super.setTouchListener();
-        initVariables();
-        onViewDisplay();
-        //setState(true);
-        loadData();
-        report4UserListener();
-    }
-
-    @Override
-    public void onDestroy() {
-        saveData();
-        floatingActionButton.setVisibility(View.VISIBLE);
-        user.setOnline(false);
-        locationUser.setLatitude(0.0);
-        locationUser.setLongitude(0.0);
-        locationUser.userUpdate();
-        user.userUpdate();
-        deleteReport4User();
-        locationManager.removeUpdates(this);
-        if (mTTS != null) {
-            mTTS.stop();
-            mTTS.shutdown();
-        }
-        Log.d(TAG, getString(R.string.firebase_upload));
-        super.onDestroy();
-        //killApp();
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String input = intent.getStringExtra("inputExtra");
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -168,6 +97,16 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         tracking();
         textToSpeechListener();
         return super.onStartCommand(intent, flags, Service.START_NOT_STICKY);
+    }
+
+    @Override
+    protected void setTouchListener() {
+        super.setTouchListener();
+        initVariables();
+        onViewDisplay();
+        //setState(true);
+        loadData();
+        report4UserListener();
     }
 
     @Override
@@ -214,6 +153,307 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
                 .build();
     }
 
+    @Override
+    public void onDestroy() {
+        saveData();
+        floatingActionButton.setVisibility(View.VISIBLE);
+        user.setOnline(false);
+        locationUser.setLatitude(0.0);
+        locationUser.setLongitude(0.0);
+        locationUser.userUpdate();
+        user.userUpdate();
+        deleteReport4User();
+        locationManager.removeUpdates(this);
+        if (mTTS != null) {
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+        Log.d(TAG, getString(R.string.firebase_upload));
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude());
+        report.setLatitude(location.getLatitude());
+        report.setLongitude(location.getLongitude());
+        //Toast.makeText(getApplicationContext(), "Dane z GPS: " + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+        if (locationUser != null) {
+            locationUser.setLatitude(location.getLatitude());
+            locationUser.setLongitude(location.getLongitude());
+            locationUser.userUpdate();
+        } else {
+            locationUserUpdate(location.getLatitude(), location.getLongitude());
+        }
+        if (report4User != null) {
+            currentDistance(location.getLatitude(), location.getLongitude(), report4User.getLatitudeReport(), report4User.getLongitudeReport());
+        }
+        Log.d(TAG, getString(R.string.firebase_upload));
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Intent serviceIntent = new Intent(this, FloatingService.class);
+        stopService(serviceIntent);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void tracking() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, this);
+    }
+
+    /*Nasłuchiwanie kolekcji*/
+    private void report4UserListener() {
+        documentReference = db.document("users/" + user_google_information.getEmail() + "/report4user/currentReport");
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if ((e) != null) {
+                    return;
+                }
+                if (documentSnapshot.exists()) {
+                    if (reportsID.isEmpty()) {
+                        reportsID.add(documentSnapshot.getString("reportid"));
+                        createReport4User(documentSnapshot);
+                    } else if (reportsID.contains(documentSnapshot.getString("reportid")) == true) {
+                        return;
+                    } else if (reportsID.contains(documentSnapshot.getString("reportid")) == false) {
+                        reportsID.add(documentSnapshot.getString("reportid"));
+                        createReport4User(documentSnapshot);
+                    }
+                }
+            }
+        });
+    }
+
+    private void createReport4User(DocumentSnapshot documentSnapshot) {
+        report4User = documentSnapshot.toObject(Report4User.class);
+        radius.setText(round(report4User.getDistance(), 1) + "m");
+        user_rating.setText(round(report4User.getRating(), 1) + "");
+        email.setText(report4User.getBroadcaster());
+        switch (report4User.getAction()) {
+            case "carAccident": {
+                iconAction4Report.setImageResource(R.drawable.ic_car_crash);
+                break;
+            }
+            case "speedCamera": {
+                iconAction4Report.setImageResource(R.drawable.ic_speed_camera);
+                break;
+            }
+            case "roadworks": {
+                iconAction4Report.setImageResource(R.drawable.ic_traffic_cone);
+                break;
+            }
+            case "roadsideInspection": {
+                iconAction4Report.setImageResource(R.drawable.ic_warning);
+                break;
+            }
+            default: {
+                iconAction4Report.setImageResource(R.drawable.ic_info);
+            }
+        }
+        report4User.report4UserToString();
+        userBroadcaster = new User(report4User.getBroadcaster());
+        userBroadcaster.userDownloadOnes();
+        speakToUser(report4User.getAction(), report4User.getDistance());
+        hideUp();
+        try {
+            setState(true);
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
+
+    private void speakToUser(String action, Double meters) {
+        switch (action) {
+            case "carAccident": {
+                action = getString(R.string.tts_carAccident);
+                break;
+            }
+            case "speedCamera": {
+                iconAction4Report.setImageResource(R.drawable.ic_speed_camera);
+                break;
+            }
+            case "roadworks": {
+                iconAction4Report.setImageResource(R.drawable.ic_traffic_cone);
+                break;
+            }
+            case "roadsideInspection": {
+                iconAction4Report.setImageResource(R.drawable.ic_warning);
+                break;
+            }
+        }
+        if (meters != null) {
+            mTTS.speak(action + Math.round(meters) + getString(R.string.tts_meters), TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            mTTS.speak(getString(R.string.send_report) + action, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+
+    }
+
+    private void textToSpeechListener() {
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = mTTS.setLanguage(Locale.ENGLISH);
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Language not supported");
+
+                        //mTTS.setLanguage(Locale.getDefault());
+                    }
+                } else {
+                    Log.e(TAG + " TTS", "Initialization failed");
+                }
+            }
+        });
+
+        float pitch = 1.1f;
+        float speed = 1;
+
+        mTTS.setPitch(pitch);
+        mTTS.setSpeechRate(speed);
+    }
+
+
+    private void chooseActionSendReport(String action) {
+        if (networkStateReceiver.haveNetworkConnection(this) == false) {
+            Toast.makeText(getApplicationContext(), getString(R.string.pls_turn_on_network_connection), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (report.coordinatesNotNull() == true) {
+            report.setAction(action);
+            report.setTime(currentTime.milliseconds());
+            report.reportUpdate();
+            Log.d(TAG, getString(R.string.send_report));
+            setState(false);
+            //Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
+            speakToUser(action, null);
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.lost_gps), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void locationUserUpdate(Double latitude, Double longitude) {
+        documentReference = db.document("users/" + user_google_information.getEmail() + "/locationUser/" + user_google_information.getEmail());
+        documentReference.update("latitude", latitude);
+        documentReference.update("longitude", longitude);
+    }
+
+    private void uploadRateUser(int state) {
+        documentReference = db.collection("users").document(userBroadcaster.getEmail());
+        switch (state) {
+            case 1: {
+                documentReference.update("like", userBroadcaster.getLike() + 1);
+                deleteReport4User();
+                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_feedback), Toast.LENGTH_LONG).show();
+                break;
+            }
+            case -1: {
+                documentReference.update("dislike", userBroadcaster.getDislike() + 1);
+                deleteReport4User();
+                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_feedback), Toast.LENGTH_LONG).show();
+                break;
+            }
+            default: {
+                deleteReport4User();
+            }
+        }
+        userBroadcaster = null;
+    }
+
+    private void deleteReport4User() {
+        documentReference = db.collection("users").document(user_google_information.getEmail())
+                .collection("report4user").document("currentReport");
+        documentReference.delete();
+        report4User = null;
+        hideDown();
+        setState(false);
+    }
+
+    private void currentDistance(Double stLati, Double stLong, Double endLati, Double endLong) {
+        float[] tablica = new float[2];
+        location.distanceBetween(stLati, stLong, endLati, endLong, tablica);
+        for (int i = 0; i < tablica.length; i++) {
+            Log.d(TAG, "Element tablicy " + i + " to " + tablica[i]);
+        }
+        report4User.setDistance(Double.valueOf(tablica[0]));
+        radius.setText(Math.round(report4User.getDistance()) + "m");
+        if (tablica[0] > 999) {
+            uploadRateUser(999);
+            Log.d(TAG, "Dystans >999m " + tablica[0]);
+        }
+        tablica = null;
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        if (!reportsID.isEmpty()) {
+            String lastReportID = reportsID.get(reportsID.size() - 1);
+            reportsID.clear();
+            reportsID.add(lastReportID);
+        }
+        String json = gson.toJson(reportsID);
+        editor.putString("task list", json);
+        editor.apply();
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("task list", null);
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        reportsID = gson.fromJson(json, type);
+
+        if (reportsID == null) {
+            reportsID = new ArrayList<>();
+        }
+    }
+
+    private void hideUp() {
+        buttonTrafficCone.setVisibility(View.GONE);
+        buttonCarCrash.setVisibility(View.GONE);
+        buttonInspection.setVisibility(View.GONE);
+        buttonSpeedCamera.setVisibility(View.GONE);
+        radiusCV.setVisibility(View.VISIBLE);
+        iconCV.setVisibility(View.VISIBLE);
+        user_ratingCV.setVisibility(View.VISIBLE);
+        emailCV.setVisibility(View.VISIBLE);
+        like.setVisibility(View.VISIBLE);
+        dislike.setVisibility(View.VISIBLE);
+        skip.setVisibility(View.VISIBLE);
+    }
+
+    private void hideDown() {
+        buttonTrafficCone.setVisibility(View.VISIBLE);
+        buttonCarCrash.setVisibility(View.VISIBLE);
+        buttonInspection.setVisibility(View.VISIBLE);
+        buttonSpeedCamera.setVisibility(View.VISIBLE);
+        radiusCV.setVisibility(View.GONE);
+        iconCV.setVisibility(View.GONE);
+        user_ratingCV.setVisibility(View.GONE);
+        emailCV.setVisibility(View.GONE);
+        like.setVisibility(View.GONE);
+        dislike.setVisibility(View.GONE);
+        skip.setVisibility(View.GONE);
+    }
+
     private void initVariables() {
         buttonTrafficCone = expandableView.findViewById(R.id.traffic_cone);
         buttonCarCrash = expandableView.findViewById(R.id.car_crash);
@@ -239,29 +479,6 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         email = expandableView.findViewById(R.id.email);
         iconAction4Report = expandableView.findViewById(R.id.iconAction4Report);
         iconAction4Report.setImageResource(R.drawable.ic_like);
-    }
-
-    private void functionHttps() {
-        mFunctions = FirebaseFunctions.getInstance();
-
-        FirebaseFunctions.getInstance() // Optional region: .getInstance("europe-west1")
-                .getHttpsCallable("onReportCreate")
-                .call()
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Błąd przy wywołaniu: " + e);
-                        Toast.makeText(getApplicationContext(), "Błąd przy wywołaniu: " + e, Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
-                    @Override
-                    public void onSuccess(HttpsCallableResult httpsCallableResult) {
-                        Log.d(TAG, "Poprawnie wywołana funkcja");
-                        Toast.makeText(getApplicationContext(), "Poprawnie wywołana funkcja", Toast.LENGTH_LONG).show();
-                    }
-                });
-
     }
 
     public void onViewDisplay() {
@@ -323,226 +540,20 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         });
     }
 
-    private void chooseActionSendReport(String action) {
-        if (networkStateReceiver.haveNetworkConnection(this) == false) {
-            Toast.makeText(getApplicationContext(), getString(R.string.pls_turn_on_network_connection), Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (report.coordinatesNotNull() == true) {
-            report.setAction(action);
-            report.setTime(currentTime.milliseconds());
-            report.reportUpdate();
-            Log.d(TAG, getString(R.string.send_report));
-            setState(false);
-            //Toast.makeText(getApplicationContext(), getString(R.string.send_report) + " " + action, Toast.LENGTH_LONG).show();
-            speakToUser(action, null);
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.lost_gps), Toast.LENGTH_LONG).show();
-        }
+    private double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
-    private void speakToUser(String action, Double meters) {
-        switch (action) {
-            case "carAccident": {
-                action = getString(R.string.tts_carAccident);
-                break;
-            }
-            case "speedCamera": {
-                iconAction4Report.setImageResource(R.drawable.ic_speed_camera);
-                break;
-            }
-            case "roadworks": {
-                iconAction4Report.setImageResource(R.drawable.ic_traffic_cone);
-                break;
-            }
-            case "roadsideInspection": {
-                iconAction4Report.setImageResource(R.drawable.ic_warning);
-                break;
-            }
-        }
-        if (meters != null) {
-            mTTS.speak(action + Math.round(meters) + getString(R.string.tts_meters), TextToSpeech.QUEUE_FLUSH, null, null);
-        } else {
-            mTTS.speak(getString(R.string.send_report) + action, TextToSpeech.QUEUE_FLUSH, null, null);
-        }
-
-    }
-
-    private void textToSpeechListener() {
-        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int result = mTTS.setLanguage(Locale.ENGLISH);
-
-                    if (result == TextToSpeech.LANG_MISSING_DATA
-                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "Language not supported");
-
-                        //mTTS.setLanguage(Locale.getDefault());
-                    }
-                } else {
-                    Log.e(TAG + " TTS", "Initialization failed");
-                }
-            }
-        });
-
-        float pitch = 1.1f;
-        float speed = 1;
-
-        mTTS.setPitch(pitch);
-        mTTS.setSpeechRate(speed);
-    }
-
-    private void locationUserUpdate(Double latitude, Double longitude) {
-        documentReference = db.document("users/" + user_google_information.getEmail() + "/locationUser/" + user_google_information.getEmail());
-        documentReference.update("latitude", latitude);
-        documentReference.update("longitude", longitude);
-    }
-
-    /*Nasłuchiwanie kolekcji*/
-    private void report4UserListener() {
-        documentReference = db.document("users/" + user_google_information.getEmail() + "/report4user/currentReport");
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if ((e) != null) {
-                    return;
-                }
-                if (documentSnapshot.exists()) {
-                    if (reportsID.isEmpty()) {
-                        reportsID.add(documentSnapshot.getString("reportid"));
-                        createReport4User(documentSnapshot);
-                    } else if (reportsID.contains(documentSnapshot.getString("reportid")) == true) {
-                        return;
-                    } else if (reportsID.contains(documentSnapshot.getString("reportid")) == false) {
-                        reportsID.add(documentSnapshot.getString("reportid"));
-                        createReport4User(documentSnapshot);
-                    }
-                }
-            }
-        });
-    }
-
+    //test
     private Double tooLong(Double distance) {
         if (distance > 500) {
             return Double.valueOf(500);
         } else {
             return distance;
-        }
-    }
-
-    private void createReport4User(DocumentSnapshot documentSnapshot) {
-        report4User = documentSnapshot.toObject(Report4User.class);
-//        radius.setText(Math.round(report4User.getDistance()) + "m");
-        radius.setText(round(report4User.getDistance(), 1) + "m");
-        //radius.setText(tooLong(report4User.getDistance()) + "m");
-        user_rating.setText(round(report4User.getRating(), 1) + "");
-//        user_rating.setText(String.format("%.2g%n", report4User.getRating()));
-        email.setText(report4User.getBroadcaster());
-        switch (report4User.getAction()) {
-            case "carAccident": {
-                iconAction4Report.setImageResource(R.drawable.ic_car_crash);
-                break;
-            }
-            case "speedCamera": {
-                iconAction4Report.setImageResource(R.drawable.ic_speed_camera);
-                break;
-            }
-            case "roadworks": {
-                iconAction4Report.setImageResource(R.drawable.ic_traffic_cone);
-                break;
-            }
-            case "roadsideInspection": {
-                iconAction4Report.setImageResource(R.drawable.ic_warning);
-                break;
-            }
-            default: {
-                iconAction4Report.setImageResource(R.drawable.ic_info);
-            }
-        }
-        report4User.report4UserToString();
-        userBroadcaster = new User(report4User.getBroadcaster());
-        userBroadcaster.userDownloadOnes();
-        speakToUser(report4User.getAction(), report4User.getDistance());
-        hideUp();
-        try {
-            setState(true);
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
-        }
-    }
-
-    private void uploadRateUser(int state) {
-        documentReference = db.collection("users").document(userBroadcaster.getEmail());
-        switch (state) {
-            case 1: {
-                documentReference.update("like", userBroadcaster.getLike() + 1);
-                deleteReport4User();
-                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_feedback), Toast.LENGTH_LONG).show();
-                break;
-            }
-            case -1: {
-                documentReference.update("dislike", userBroadcaster.getDislike() + 1);
-                deleteReport4User();
-                Toast.makeText(getApplicationContext(), getString(R.string.thx_for_feedback), Toast.LENGTH_LONG).show();
-                break;
-            }
-            default: {
-                deleteReport4User();
-            }
-        }
-        userBroadcaster = null;
-    }
-
-    private void deleteReport4User() {
-        documentReference = db.collection("users").document(user_google_information.getEmail())
-                .collection("report4user").document("currentReport");
-        documentReference.delete();
-        report4User = null;
-        hideDown();
-        setState(false);
-    }
-
-    private void currentDistance(Double stLati, Double stLong, Double endLati, Double endLong) {
-        float[] tablica = new float[2];
-        location.distanceBetween(stLati, stLong, endLati, endLong, tablica);
-        for (int i = 0; i < tablica.length; i++) {
-            Log.d(TAG, "Element tablicy " + i + " to " + tablica[i]);
-        }
-        report4User.setDistance(Double.valueOf(tablica[0]));
-        radius.setText(Math.round(report4User.getDistance()) + "m");
-        if (tablica[0] > 5000000) {
-            uploadRateUser(0);
-            Log.d(TAG, "performClick " + tablica[0]);
-        }
-        tablica = null;
-    }
-
-    private void saveData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        if (!reportsID.isEmpty()) {
-            String lastReportID = reportsID.get(reportsID.size() - 1);
-            reportsID.clear();
-            reportsID.add(lastReportID);
-        }
-        String json = gson.toJson(reportsID);
-        editor.putString("task list", json);
-        editor.apply();
-    }
-
-    private void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("task list", null);
-        Type type = new TypeToken<ArrayList<String>>() {
-        }.getType();
-        reportsID = gson.fromJson(json, type);
-
-        if (reportsID == null) {
-            reportsID = new ArrayList<>();
         }
     }
 
@@ -555,39 +566,27 @@ public class FloatingService extends FloatingBubbleService implements LocationLi
         getApplication().startActivity(myIntent);
     }
 
-    private void hideUp() {
-        buttonTrafficCone.setVisibility(View.GONE);
-        buttonCarCrash.setVisibility(View.GONE);
-        buttonInspection.setVisibility(View.GONE);
-        buttonSpeedCamera.setVisibility(View.GONE);
-        radiusCV.setVisibility(View.VISIBLE);
-        iconCV.setVisibility(View.VISIBLE);
-        user_ratingCV.setVisibility(View.VISIBLE);
-        emailCV.setVisibility(View.VISIBLE);
-        like.setVisibility(View.VISIBLE);
-        dislike.setVisibility(View.VISIBLE);
-        skip.setVisibility(View.VISIBLE);
-    }
+    //test wywolania function HTTPS
+    private void functionHttps() {
+        mFunctions = FirebaseFunctions.getInstance();
 
-    private void hideDown() {
-        buttonTrafficCone.setVisibility(View.VISIBLE);
-        buttonCarCrash.setVisibility(View.VISIBLE);
-        buttonInspection.setVisibility(View.VISIBLE);
-        buttonSpeedCamera.setVisibility(View.VISIBLE);
-        radiusCV.setVisibility(View.GONE);
-        iconCV.setVisibility(View.GONE);
-        user_ratingCV.setVisibility(View.GONE);
-        emailCV.setVisibility(View.GONE);
-        like.setVisibility(View.GONE);
-        dislike.setVisibility(View.GONE);
-        skip.setVisibility(View.GONE);
-    }
+        FirebaseFunctions.getInstance() // Optional region: .getInstance("europe-west1")
+                .getHttpsCallable("onReportCreate")
+                .call()
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Błąd przy wywołaniu: " + e);
+                        Toast.makeText(getApplicationContext(), "Błąd przy wywołaniu: " + e, Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
+                    @Override
+                    public void onSuccess(HttpsCallableResult httpsCallableResult) {
+                        Log.d(TAG, "Poprawnie wywołana funkcja");
+                        Toast.makeText(getApplicationContext(), "Poprawnie wywołana funkcja", Toast.LENGTH_LONG).show();
+                    }
+                });
 
-    private double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
     }
 }

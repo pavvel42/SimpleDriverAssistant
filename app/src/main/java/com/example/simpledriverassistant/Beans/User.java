@@ -18,8 +18,6 @@ public class User {
     private String email;
     private String uid;
     private String name;
-    //    private Double latitude;
-    //    private Double longitude;
     private Boolean online;
     private LocationUser locationUser;
     private int like;
@@ -131,7 +129,6 @@ public class User {
                     User userDocument = documentSnapshot.toObject(User.class);
                     setLike(userDocument.getLike());
                     setDislike(userDocument.getDislike());
-                    //refreshFragment();
                 }
                 Log.d(TAG, "Dane zostały zapisane");
             }
