@@ -41,5 +41,6 @@ Layout sketch ready to use. Requires to be connected to your Firebase project.
 
 # How to add function to firebase project
 
-**[Deploy this functions](https://github.com/pavvel42/SimpleDriverAssistant/tree/master/Firebase%20Function)** **[according to this manual](https://youtu.be/DYfP-UIKxH0?list=PLl-K7zZEsYLkPZHe41m4jfAxUi0JjLgSM)**
-**[Don't forget about Add the Firebase Admin SDK](https://github.com/googlesamples/easypermissions)**
+**[Deploy functions](https://github.com/pavvel42/SimpleDriverAssistant/tree/master/Firebase%20Function)** **[ according to this manual.](https://youtu.be/DYfP-UIKxH0?list=PLl-K7zZEsYLkPZHe41m4jfAxUi0JjLgSM)**
+
+**[Don't forget about Add the Firebase Admin SDK.](https://firebase.google.com/docs/admin/setup?authuser=1#add-sdk)**
