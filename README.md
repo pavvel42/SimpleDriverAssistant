@@ -6,27 +6,15 @@
 
 **Projekt i implementacja mobilnej aplikacji do informowania o zdarzeniach drogowych / The Project and implementation of a mobile application for reporting road accidents**
 
+_min API Version 23_
+
+Layout sketch ready to use. Requires to be connected to your Firebase project.
+
 # Documentation
 
 **[Application Presentation](https://photos.app.goo.gl/r1gfx6jx3M2Fcwsy5)**
 
 **[Dokumentacja projektu PL](https://github.com/pavvel42/SimpleDriverAssistant/blob/master/Projekt-i-implementacja-mobilnej-aplikacji-do-informowania-o-zdarzeniach-drogowych.pdf)**
-
-# Used libraries
-
-**[Picasso](https://github.com/square/picasso)**
-
-**[CircleImageView](https://github.com/hdodenhof/CircleImageView)**
-
-**[FloatingActionButtonSpeedDial](https://github.com/leinardi/FloatingActionButtonSpeedDial)**
-
-**[EasyPermissions](https://github.com/googlesamples/easypermissions)**
-
-**[Gson](https://github.com/google/gson)**
-
-_min API Version 23_
-
-Layout sketch ready to use. Requires to be connected to your Firebase project.
 
 # How to run
 
@@ -43,4 +31,16 @@ Layout sketch ready to use. Requires to be connected to your Firebase project.
 
 **[Deploy functions](https://github.com/pavvel42/SimpleDriverAssistant/tree/master/Firebase%20Function)** **[ according to this manual.](https://youtu.be/DYfP-UIKxH0?list=PLl-K7zZEsYLkPZHe41m4jfAxUi0JjLgSM)**
 
-**[Don't forget about Add the Firebase Admin SDK.](https://firebase.google.com/docs/admin/setup?authuser=1#add-sdk)**
+**[Don't forget about add the Firebase Admin SDK.](https://firebase.google.com/docs/admin/setup?authuser=1#add-sdk)**
+
+# Used libraries
+
+**[Picasso](https://github.com/square/picasso)**
+
+**[CircleImageView](https://github.com/hdodenhof/CircleImageView)**
+
+**[FloatingActionButtonSpeedDial](https://github.com/leinardi/FloatingActionButtonSpeedDial)**
+
+**[EasyPermissions](https://github.com/googlesamples/easypermissions)**
+
+**[Gson](https://github.com/google/gson)**
