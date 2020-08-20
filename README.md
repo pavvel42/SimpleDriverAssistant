@@ -39,7 +39,7 @@ Layout sketch ready to use. Requires to be connected to your Firebase project.
 
 **[CircleImageView](https://github.com/hdodenhof/CircleImageView)**
 
-**[FloatingActionButtonSpeedDial](https://github.com/leinardi/FloatingActionButtonSpeedDial)**
+**[Floating Bubble Library](https://github.com/BijoySingh/Floating-Bubble-Library-Android)**
 
 **[EasyPermissions](https://github.com/googlesamples/easypermissions)**
 
